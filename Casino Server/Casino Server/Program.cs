@@ -20,8 +20,6 @@ class Program
                 MMMServer.packet = MMMServer.receivePacket();
                 MMMServer.runProtocol();
             }
-
-            MMMServer.shutDown();
         }
         catch (SocketException e)
         {

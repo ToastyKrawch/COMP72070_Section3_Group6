@@ -105,6 +105,10 @@ namespace CasinoLibrary
         {
             switch (packet.PacketType) 
             {
+                //Client has disconnected
+                case 0:
+                    shutDown();
+                    break;
                 case 1:
                     Console.WriteLine("Start BlackJack Game request received. Initializing a new game...");
                     BlackjackGame BJG = new BlackjackGame(this);

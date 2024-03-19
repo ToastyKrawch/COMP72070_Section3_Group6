@@ -51,6 +51,11 @@
             pictureBox10 = new PictureBox();
             label1 = new Label();
             label7 = new Label();
+            panel1 = new Panel();
+            button2 = new Button();
+            button1 = new Button();
+            panel2 = new Panel();
+            label8 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -61,6 +66,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox9).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox10).BeginInit();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // button3
@@ -105,7 +112,7 @@
             button6.BackColor = SystemColors.ActiveCaptionText;
             button6.Font = new Font("Showcard Gothic", 15.75F);
             button6.ForeColor = SystemColors.ButtonHighlight;
-            button6.Location = new Point(650, 286);
+            button6.Location = new Point(648, 8);
             button6.Name = "button6";
             button6.Size = new Size(119, 75);
             button6.TabIndex = 18;
@@ -118,7 +125,7 @@
             button8.BackColor = SystemColors.ActiveCaptionText;
             button8.Font = new Font("Showcard Gothic", 15.75F);
             button8.ForeColor = SystemColors.ButtonHighlight;
-            button8.Location = new Point(650, 367);
+            button8.Location = new Point(648, 96);
             button8.Name = "button8";
             button8.Size = new Size(119, 75);
             button8.TabIndex = 20;
@@ -330,12 +337,71 @@
             label7.TabIndex = 38;
             label7.Text = "0";
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.FromArgb(128, 64, 64, 64);
+            panel1.Controls.Add(button2);
+            panel1.Controls.Add(button1);
+            panel1.Controls.Add(panel2);
+            panel1.ForeColor = Color.Plum;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(780, 463);
+            panel1.TabIndex = 39;
+            // 
+            // button2
+            // 
+            button2.BackColor = SystemColors.ButtonFace;
+            button2.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            button2.ForeColor = Color.Black;
+            button2.Location = new Point(69, 253);
+            button2.Name = "button2";
+            button2.Size = new Size(289, 87);
+            button2.TabIndex = 2;
+            button2.Text = "Back to Main Menu";
+            button2.UseVisualStyleBackColor = false;
+            // 
+            // button1
+            // 
+            button1.BackColor = SystemColors.ButtonFace;
+            button1.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.Black;
+            button1.Location = new Point(422, 253);
+            button1.Name = "button1";
+            button1.Size = new Size(289, 87);
+            button1.TabIndex = 1;
+            button1.Text = "Another Hand";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.FromArgb(128, 32, 32, 32);
+            panel2.Controls.Add(label8);
+            panel2.Location = new Point(0, 74);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(780, 100);
+            panel2.TabIndex = 0;
+            // 
+            // label8
+            // 
+            label8.BackColor = Color.Transparent;
+            label8.Dock = DockStyle.Fill;
+            label8.Font = new Font("Segoe UI", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label8.ForeColor = Color.DarkRed;
+            label8.Location = new Point(0, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(780, 100);
+            label8.TabIndex = 0;
+            label8.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // BlackJack
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(781, 462);
+            Controls.Add(panel1);
             Controls.Add(label7);
             Controls.Add(label1);
             Controls.Add(pictureBox10);
@@ -358,6 +424,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(button3);
+            ForeColor = Color.Red;
             Name = "BlackJack";
             Text = "BlackJack";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -370,6 +437,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox9).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox10).EndInit();
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -400,5 +469,10 @@
         private PictureBox pictureBox10;
         private Label label1;
         private Label label7;
+        private Panel panel1;
+        private Panel panel2;
+        private Label label8;
+        private Button button2;
+        private Button button1;
     }
 }

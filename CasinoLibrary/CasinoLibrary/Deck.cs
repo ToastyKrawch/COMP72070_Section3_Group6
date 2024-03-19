@@ -12,6 +12,7 @@ namespace CasinoLibrary
 
         public Deck()
         {
+            cards = new List<Card>();
             InitializeDeck();
             ShuffleDeck();
         }
@@ -23,7 +24,6 @@ namespace CasinoLibrary
 
         private void InitializeDeck()
         {
-            cards = new List<Card>();
             string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
             string[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
 

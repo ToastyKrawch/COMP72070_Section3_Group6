@@ -17,6 +17,7 @@ using System.Collections.Specialized;
  * 1 - Send hand total, "Hand value"
  * 2 - Send card count, "Card count"
  * 3 - Send game outcome, "true or false based on the request"
+ * 4 - Send ready status, "No message"
  * 
  */
 
@@ -37,9 +38,10 @@ namespace CasinoLibrary
         public int turn;            //0 For player, 1 for bot
         private bool playerBust = false;    
         public bool playerBJ = false;
-        private bool playerWL;      //true for Win, false for Loss
 
-        public BlackjackGame(TCPServer s)
+        private PlayerInfo player;
+
+        public BlackjackGame(TCPServer s, PlayerInfo p)
         {
             MMMServer = s;
 
@@ -47,10 +49,12 @@ namespace CasinoLibrary
             //playerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
             playerHand = new List<Card> { new Card("Spades", "Ace", 11), new Card("Hearts", "King", 10) };
             conservativeHand = new List<Card> { deck.DealCard(), deck.DealCard() };
-            dealerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
+            //dealerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
+            dealerHand = new List<Card> { new Card("Hearts", "6", 6), new Card("Spades", "King", 10) };
             gamestatus = false;
-
             turn = 0;
+
+            player = p;
         }
 
         public void StartGame()
@@ -98,7 +102,7 @@ namespace CasinoLibrary
             gameOutcome(conservativeHand, "c");
 
             //Listen for client's game outcome requests
-            MMMServer.packet.PacketType = 0;
+            MMMServer.packet = MMMServer.sendPacket(4, "Awaiting next requests");
             Listen();
         }
 
@@ -219,7 +223,7 @@ namespace CasinoLibrary
                     {
                         MMMServer.packet = MMMServer.sendPacket(0, dealerHand[Int32.Parse(data[1]) - 1].Rank + "," + dealerHand[Int32.Parse(data[1]) - 1].Suit);
                     }
-                        break;
+                    break;
 
                 // Request for hand total
                 case 1:
@@ -229,14 +233,22 @@ namespace CasinoLibrary
                     }
                     else if (data[0] == "Dealer")
                     {
+                        int handTotal = 0;
+
                         if (data[1] == "1")
                         {
-                            MMMServer.packet = MMMServer.sendPacket(1, dealerHand[1].Value.ToString());
+                            handTotal += dealerHand[1].Value;
                         }
+
                         else
                         {
-                            MMMServer.packet = MMMServer.sendPacket(1, CalculateHandValue(dealerHand).ToString());
+                            for (int i = 0; i < Int32.Parse(data[1]); i++)
+                            {
+                                handTotal += dealerHand[i].Value;
+                            }
                         }
+                        
+                        MMMServer.packet = MMMServer.sendPacket(1, handTotal.ToString());
                     }
                     break;
 
@@ -245,10 +257,12 @@ namespace CasinoLibrary
                     if (data[0] == "Player")
                     {
                         MMMServer.packet = MMMServer.sendPacket(2, playerHand.Count.ToString());
+                        MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
                     }
                     else if (data[0] == "Dealer")
                     {
                         MMMServer.packet = MMMServer.sendPacket(2, dealerHand.Count.ToString());
+                        MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
                     }
                     break;
 
@@ -264,24 +278,22 @@ namespace CasinoLibrary
                         {
                             MMMServer.packet = MMMServer.sendPacket(3, IsBlackJack(playerHand).ToString());
                         }
-                        else if (data[1] == "Winlose")
-                        {
-                            MMMServer.packet = MMMServer.sendPacket(3, playerWL.ToString());
-                        }
                     }
                     else if (data[0] == "Dealer")
                     {
-                        if (data[1] == "Bust")
+                        int result = gameOutcome(playerHand, "p");
+                        if (data[1] == "0")
                         {
-
+                            player.calculatePayout(0, result);
+                            MMMServer.packet = MMMServer.sendPacket(3, player.winnings.ToString());
                         }
-                        else if (data[1] == "Blackjack")
+                        else if (data[1] == "1")
                         {
-
+                            MMMServer.packet = MMMServer.sendPacket(3, result.ToString());
                         }
-                        else if (data[1] == "Winlose")
+                        else
                         {
-
+                            MMMServer.packet = MMMServer.sendPacket(3, player.balance.ToString());
                         }
                     }
                     break;
@@ -337,7 +349,7 @@ namespace CasinoLibrary
             DisplayHands(true);
         }
 
-        public string gameOutcome(List<Card> hand, string whichHand)
+        public int gameOutcome(List<Card> hand, string whichHand)
         {
             string output = "";
             // Determines which hand was sent
@@ -358,30 +370,54 @@ namespace CasinoLibrary
                 output = "All or Nothing Bot";
             }
 
-            // Determine the outcome of the game
-            if (IsBust(dealerHand))
+            //If player stands or player gets blackjack
+            if (hand.Count == 2)
             {
-                Console.WriteLine("******Dealer busted! Winner: " + output + "******");
-                playerWL = true;
-                return "******Dealer busted! Winner: " + output + "******";
+                //Blackjack + push and Blackjack + win yield the same results
+                if (IsBlackJack(hand))
+                {
+                    return 0;
+                }
+                //Player Win
+                else if (CalculateHandValue(hand) > CalculateHandValue(dealerHand))
+                {
+                    return 1;
+                }
+                //Dealer Win
+                else if (CalculateHandValue(hand) < CalculateHandValue(dealerHand))
+                {
+                    return 2;
+                }
+                //Push
+                else
+                {
+                    return 3;
+                }
             }
-            else if (CalculateHandValue(hand) > CalculateHandValue(dealerHand))
-            {
-                Console.WriteLine("******Winner: " + output + "******");
-                return "******Winner: " + output + "******";
-            }
-            else if (CalculateHandValue(hand) < CalculateHandValue(dealerHand))
-            {
-                Console.WriteLine("******Dealer wins.******");
-                playerWL = false;
-                return "******Dealer wins.******";
-            }
+            //If player hits
             else
             {
-                Console.WriteLine("******It's a tie!******");
-                return "******It's a tie!******";
+                //Player busts
+                if (IsBust(hand))
+                {
+                    return 4;
+                }
+                //Player Win
+                else if (CalculateHandValue(hand) > CalculateHandValue(dealerHand))
+                {
+                    return 1;
+                }
+                //Dealer Win
+                else if (CalculateHandValue(hand) < CalculateHandValue(dealerHand))
+                {
+                    return 2;
+                }
+                //Push
+                else
+                {
+                    return 3;
+                }
             }
-
         }
         public int CalculateHandValue(List<Card> hand)
         {

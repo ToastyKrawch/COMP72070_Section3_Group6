@@ -52,10 +52,16 @@
             label1 = new Label();
             label7 = new Label();
             panel1 = new Panel();
+            label13 = new Label();
+            label14 = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            label9 = new Label();
             button2 = new Button();
             button1 = new Button();
             panel2 = new Panel();
             label8 = new Label();
+            pictureBox11 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -68,6 +74,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox10).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox11).BeginInit();
             SuspendLayout();
             // 
             // button3
@@ -315,31 +322,36 @@
             // 
             // label1
             // 
-            label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Tahoma", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(59, 97);
+            label1.Location = new Point(8, 97);
             label1.Name = "label1";
-            label1.Size = new Size(20, 23);
+            label1.Size = new Size(120, 23);
             label1.TabIndex = 37;
             label1.Text = "0";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label7
             // 
-            label7.AutoSize = true;
             label7.BackColor = Color.Transparent;
             label7.Font = new Font("Tahoma", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label7.ForeColor = Color.White;
-            label7.Location = new Point(60, 343);
+            label7.Location = new Point(8, 343);
             label7.Name = "label7";
-            label7.Size = new Size(20, 23);
+            label7.Size = new Size(120, 23);
             label7.TabIndex = 38;
             label7.Text = "0";
+            label7.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(128, 64, 64, 64);
+            panel1.Controls.Add(label13);
+            panel1.Controls.Add(label14);
+            panel1.Controls.Add(label11);
+            panel1.Controls.Add(label10);
+            panel1.Controls.Add(label9);
             panel1.Controls.Add(button2);
             panel1.Controls.Add(button1);
             panel1.Controls.Add(panel2);
@@ -349,12 +361,70 @@
             panel1.Size = new Size(780, 463);
             panel1.TabIndex = 39;
             // 
+            // label13
+            // 
+            label13.Anchor = AnchorStyles.None;
+            label13.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label13.ForeColor = Color.White;
+            label13.Location = new Point(456, 240);
+            label13.Name = "label13";
+            label13.Size = new Size(240, 32);
+            label13.TabIndex = 7;
+            label13.Text = "Hand Total:";
+            label13.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label14.ForeColor = Color.White;
+            label14.Location = new Point(528, 192);
+            label14.Name = "label14";
+            label14.Size = new Size(100, 37);
+            label14.TabIndex = 6;
+            label14.Text = "Dealer:";
+            // 
+            // label11
+            // 
+            label11.Anchor = AnchorStyles.None;
+            label11.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label11.ForeColor = Color.White;
+            label11.Location = new Point(128, 280);
+            label11.Name = "label11";
+            label11.Size = new Size(176, 32);
+            label11.TabIndex = 5;
+            label11.Text = "Payout:";
+            label11.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label10
+            // 
+            label10.Anchor = AnchorStyles.None;
+            label10.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label10.ForeColor = Color.White;
+            label10.Location = new Point(96, 240);
+            label10.Name = "label10";
+            label10.Size = new Size(240, 32);
+            label10.TabIndex = 4;
+            label10.Text = "Hand Total:";
+            label10.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label9.ForeColor = Color.White;
+            label9.Location = new Point(168, 192);
+            label9.Name = "label9";
+            label9.Size = new Size(95, 37);
+            label9.TabIndex = 3;
+            label9.Text = "Player:";
+            // 
             // button2
             // 
             button2.BackColor = SystemColors.ButtonFace;
             button2.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             button2.ForeColor = Color.Black;
-            button2.Location = new Point(69, 253);
+            button2.Location = new Point(71, 352);
             button2.Name = "button2";
             button2.Size = new Size(289, 87);
             button2.TabIndex = 2;
@@ -366,7 +436,7 @@
             button1.BackColor = SystemColors.ButtonFace;
             button1.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             button1.ForeColor = Color.Black;
-            button1.Location = new Point(422, 253);
+            button1.Location = new Point(424, 352);
             button1.Name = "button1";
             button1.Size = new Size(289, 87);
             button1.TabIndex = 1;
@@ -394,6 +464,17 @@
             label8.Size = new Size(780, 100);
             label8.TabIndex = 0;
             label8.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox11
+            // 
+            pictureBox11.BackColor = Color.Transparent;
+            pictureBox11.Image = Properties.Resources.ReverseSide;
+            pictureBox11.Location = new Point(128, 32);
+            pictureBox11.Name = "pictureBox11";
+            pictureBox11.Size = new Size(136, 168);
+            pictureBox11.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox11.TabIndex = 40;
+            pictureBox11.TabStop = false;
             // 
             // BlackJack
             // 
@@ -424,6 +505,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(button3);
+            Controls.Add(pictureBox11);
             ForeColor = Color.Red;
             Name = "BlackJack";
             Text = "BlackJack";
@@ -438,7 +520,9 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox9).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox10).EndInit();
             panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox11).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -474,5 +558,11 @@
         private Label label8;
         private Button button2;
         private Button button1;
+        private Label label9;
+        private Label label11;
+        private Label label10;
+        private Label label13;
+        private Label label14;
+        private PictureBox pictureBox11;
     }
 }

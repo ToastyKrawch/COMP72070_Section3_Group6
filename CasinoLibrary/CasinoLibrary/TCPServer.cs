@@ -101,7 +101,7 @@ namespace CasinoLibrary
             server.Stop();
         }
 
-        public void runProtocol()
+        public void runProtocol(PlayerInfo p)
         {
             switch (packet.PacketType) 
             {
@@ -111,7 +111,12 @@ namespace CasinoLibrary
                     break;
                 case 1:
                     Console.WriteLine("Start BlackJack Game request received. Initializing a new game...");
-                    BlackjackGame BJG = new BlackjackGame(this);
+
+                    string[] data = dataPayloadString.Split(',');
+                    p.bet = Int32.Parse(data[0]);
+                    p.balance = Int32.Parse(data[1]);
+                    
+                    BlackjackGame BJG = new BlackjackGame(this, p);
                     BJG.StartGame();
                     break;
             }

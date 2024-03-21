@@ -8,13 +8,55 @@ namespace CasinoLibrary
 {
     public class PlayerInfo
     {
-        public int bet { get; set; }
-        public int balance { get; set; }
+        public double bet { get; set; }
+        public double balance { get; set; }
+        public double winnings { get; set; }
 
         public PlayerInfo() 
         { 
             bet = 0;
             balance = 1000;
+            winnings = 0;
+        }
+
+        public void calculatePayout(int game, int result)
+        {
+            switch (game) 
+            { 
+                //blackjack
+                case 0:
+                    switch (result) 
+                    {
+                        //Blackjack + push or Blackjack + win
+                        case 0:
+                            winnings = (bet * 1.5) + (bet * 2);
+                            balance += winnings;
+                            break;
+
+                        //Win
+                        case 1:
+                            winnings = bet * 2;
+                            balance += winnings;
+                            break;
+
+                        //Lose
+                        case 2:
+                            winnings = bet * -1;
+                            balance += winnings;
+                            break;
+
+                        //Push
+                        case 3:
+                            break;
+
+                        //Bust
+                        case 4:
+                            winnings = bet * -1;
+                            balance += winnings;
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

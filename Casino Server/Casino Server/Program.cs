@@ -18,7 +18,7 @@ class Program
             while (true)
             {
                 MMMServer.packet = MMMServer.receivePacket();
-                MMMServer.runProtocol();
+                MMMServer.runProtocol(player);
             }
         }
         catch (SocketException e)

@@ -46,11 +46,9 @@ namespace CasinoLibrary
             MMMServer = s;
 
             deck = new Deck();
-            //playerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
-            playerHand = new List<Card> { new Card("Spades", "Ace", 11), new Card("Hearts", "King", 10) };
+            playerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
             conservativeHand = new List<Card> { deck.DealCard(), deck.DealCard() };
-            //dealerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
-            dealerHand = new List<Card> { new Card("Hearts", "6", 6), new Card("Spades", "King", 10) };
+            dealerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
             gamestatus = false;
             turn = 0;
 
@@ -244,7 +242,20 @@ namespace CasinoLibrary
                         {
                             for (int i = 0; i < Int32.Parse(data[1]); i++)
                             {
+                                int numAces = 0;
+
                                 handTotal += dealerHand[i].Value;
+                                
+                                if (dealerHand[i].Rank == "Ace")
+                                {
+                                    numAces++;
+                                }
+
+                                while (numAces > 0 && handTotal > 21)
+                                {
+                                    handTotal -= 10;
+                                    numAces--;
+                                }
                             }
                         }
                         
@@ -383,10 +394,19 @@ namespace CasinoLibrary
                 {
                     return 1;
                 }
-                //Dealer Win
+                //Dealer has higher hand value
                 else if (CalculateHandValue(hand) < CalculateHandValue(dealerHand))
                 {
-                    return 2;
+                    //Win by dealer busting
+                    if (IsBust(dealerHand))
+                    {
+                        return 1;
+                    }
+                    //Dealer Win
+                    else
+                    {
+                        return 2;
+                    }
                 }
                 //Push
                 else
@@ -407,10 +427,19 @@ namespace CasinoLibrary
                 {
                     return 1;
                 }
-                //Dealer Win
+                //Dealer has higher hand value
                 else if (CalculateHandValue(hand) < CalculateHandValue(dealerHand))
                 {
-                    return 2;
+                    //Win by dealer busting
+                    if (IsBust(dealerHand))
+                    {
+                        return 1;
+                    }
+                    //Dealer Win
+                    else
+                    {
+                        return 2;
+                    }
                 }
                 //Push
                 else

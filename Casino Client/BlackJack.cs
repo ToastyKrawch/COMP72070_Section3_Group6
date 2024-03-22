@@ -78,6 +78,8 @@ namespace Casino_Client
             // Hide the startup panel
             startupPanel.Visible = false;
 
+            UpdateBalance();
+
             // Show bet elements
             ShowBetElements();
         }
@@ -191,7 +193,7 @@ namespace Casino_Client
         {
             label5.Text = player.bet.ToString();
 
-            if (player.bet > 0)
+            if (player.bet > 0 && player.balance > 0)
             {
                 button10.Enabled = true;
                 button10.ForeColor = Color.White;
@@ -322,13 +324,13 @@ namespace Casino_Client
             client.packet = client.receivePacket();
             label1.Text = client.dataPayloadString;
 
-            for (int i = 3; i < dealerCards.Count; i++) 
+            for (int i = 0; i < numDealerCards - 2; i++) 
             {
                 await Task.Delay(1000);
-                dealerCards[i - 1].Show();
+                dealerCards[i].Show();
 
                 //Send a request for the dealer's new hand total
-                client.packet = client.sendPacket(1, "Dealer," + i);
+                client.packet = client.sendPacket(1, "Dealer," + (i + 3));
                 client.packet = client.receivePacket();
                 label1.Text = client.dataPayloadString;
             }
@@ -597,7 +599,7 @@ namespace Casino_Client
         }
 
         //Hit button
-        private void button6_Click(object sender, EventArgs e)
+        private async void button6_Click(object sender, EventArgs e)
         {
             //Run initial hit communications
             client.packet = client.sendPacket(3, "H");                                      //Send decision
@@ -615,8 +617,7 @@ namespace Casino_Client
                 HideGameOptions();
 
                 dealerTurn();
-
-                endScreen();
+                await revealDealerCards();
             }
 
             //Check to see if the player got blackjack
@@ -629,8 +630,7 @@ namespace Casino_Client
                 HideGameOptions();
 
                 dealerTurn();
-
-                endScreen();
+                await revealDealerCards();
             }
 
             client.packet = client.sendPacket(2, "Information received successfully, continue"); //Tell server to continue
@@ -708,11 +708,14 @@ namespace Casino_Client
             {
                 pictureBox.Location = new Point(375, 31);
             }
-            else
+            else if ( numDealerCards == 4)
             {
                 pictureBox.Location = new Point(499, 31);
             }
-
+            else
+            {
+                pictureBox.Location = new Point(623, 31);
+            }
             pictureBox.BackColor = Color.Transparent;
             pictureBox.Size = new Size(136, 168);
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
@@ -720,22 +723,22 @@ namespace Casino_Client
             pictureBox.Image = determineCard(0);
             this.Controls.Add(pictureBox);
             pictureBox.BringToFront();
+            pictureBox.Hide();
 
             dealerCards.Add(pictureBox);
 
             string[] data = client.dataPayloadString.Split(',');
-            label1.Text = data[data.Length - 1];
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        //Stand button
+        private async void button8_Click(object sender, EventArgs e)
         {
             client.packet = client.sendPacket(3, "S"); //Send decision
 
-            dealerTurn();
+            HideGameOptions();
 
-            //Send a request for the outcome
-            client.packet = client.sendPacket(5, "");
-            client.packet = client.receivePacket();
+            dealerTurn();
+            await revealDealerCards();
         }
 
         private void dealerTurn()
@@ -808,6 +811,7 @@ namespace Casino_Client
 
             numPlayerCards = 0;
             numDealerCards = 0;
+            dealerCards = new List<PictureBox>();
 
             updateBet();
 

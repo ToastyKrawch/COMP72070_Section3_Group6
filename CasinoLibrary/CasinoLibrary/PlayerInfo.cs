@@ -41,17 +41,19 @@ namespace CasinoLibrary
 
                         //Lose
                         case 2:
-                            winnings = bet * -1;
+                            winnings = 0;
                             balance += winnings;
                             break;
 
                         //Push
                         case 3:
+                            winnings = bet;
+                            balance += winnings;
                             break;
 
                         //Bust
                         case 4:
-                            winnings = bet * -1;
+                            winnings = 0;
                             balance += winnings;
                             break;
                     }

@@ -47,8 +47,13 @@ namespace CasinoLibrary
 
             deck = new Deck();
             playerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
+            //playerHand = new List<Card> { new Card("Spades", "10", 10), new Card("Spades", "10", 10) };
             conservativeHand = new List<Card> { deck.DealCard(), deck.DealCard() };
+            //conservativeHand = new List<Card> { new Card("Spades", "2", 2), new Card("Spades", "2", 2) };
             dealerHand = new List<Card> { deck.DealCard(), deck.DealCard() };
+
+            //deck.OverrideNextCard(new Card("Spades", "2", 2));
+
             gamestatus = false;
             turn = 0;
 
@@ -67,7 +72,9 @@ namespace CasinoLibrary
             // Display hands of player and conservative bot
             DisplayHands();
             
-            Listen();
+            Listen(playerHand);
+            MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
+            Listen(conservativeHand);
 
             while (gamestatus)
             {
@@ -78,7 +85,7 @@ namespace CasinoLibrary
                         break;
                     }
                     playerDecision();
-                    Listen();
+                    Listen(playerHand);
                 }
 
                 while (turn == 1) //Conservative Bot
@@ -100,8 +107,10 @@ namespace CasinoLibrary
             gameOutcome(conservativeHand, "c");
 
             //Listen for client's game outcome requests
-            MMMServer.packet = MMMServer.sendPacket(4, "Awaiting next requests");
-            Listen();
+            MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
+            Listen(conservativeHand);
+            MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
+            Listen(dealerHand);
         }
 
         public bool CheckCBotBust()
@@ -151,6 +160,7 @@ namespace CasinoLibrary
                     break;
                 case "S":
                     Console.WriteLine("Player chose to stand");
+                    MMMServer.packet.setPacket(27000, 27000, 2, MMMServer.packet.DataPayload);
                     turn++;
                     break;
                 default:
@@ -165,7 +175,6 @@ namespace CasinoLibrary
             if (IsBust(playerHand))
             {
                 Console.WriteLine("You busted! Next player's turn.");
-
                 playerBust = true;
 
                 // Call conservative bot after player's turn
@@ -190,13 +199,15 @@ namespace CasinoLibrary
             return false;
         }
 
-        public void Listen()
+        public void Listen(List<Card> h)
         {
+            List<Card> hand = h;
+
             //Listen for client's initial requests
             while (MMMServer.packet.PacketType != 2)
             {
                 MMMServer.packet = MMMServer.receivePacket();
-                runBJP(); //Runs a prtocol pased on received packet type
+                runBJP(hand); //Runs a prtocol pased on received packet type
             }
         }
 
@@ -205,9 +216,10 @@ namespace CasinoLibrary
             gamestatus = true;
         }
 
-        public void runBJP()
+        public void runBJP(List<Card> hand)
         {
             string[] data = MMMServer.dataPayloadString.Split(','); //Break down the request
+            
 
             switch (MMMServer.packet.PacketType)
             {
@@ -215,7 +227,7 @@ namespace CasinoLibrary
                 case 0:
                     if (data[0] == "Player")
                     {
-                        MMMServer.packet = MMMServer.sendPacket(0, playerHand[Int32.Parse(data[1]) - 1].Rank + "," + playerHand[Int32.Parse(data[1]) - 1].Suit);
+                        MMMServer.packet = MMMServer.sendPacket(0, hand[Int32.Parse(data[1]) - 1].Rank + "," + hand[Int32.Parse(data[1]) - 1].Suit + "," + hand[Int32.Parse(data[1]) - 1].Value);
                     }
                     else if (data[0] == "Dealer")
                     {
@@ -227,7 +239,7 @@ namespace CasinoLibrary
                 case 1:
                     if (data[0] == "Player")
                     {
-                        MMMServer.packet = MMMServer.sendPacket(1, CalculateHandValue(playerHand).ToString());
+                        MMMServer.packet = MMMServer.sendPacket(1, CalculateHandValue(hand).ToString());
                     }
                     else if (data[0] == "Dealer")
                     {
@@ -261,13 +273,45 @@ namespace CasinoLibrary
                         
                         MMMServer.packet = MMMServer.sendPacket(1, handTotal.ToString());
                     }
+                    else if (data[0] == "Bot")
+                    {
+                        int handTotal = 0;
+
+                        if (data[1] == "1")
+                        {
+                            handTotal += hand[1].Value;
+                        }
+
+                        else
+                        {
+                            for (int i = 0; i < Int32.Parse(data[1]); i++)
+                            {
+                                int numAces = 0;
+
+                                handTotal += hand[i].Value;
+
+                                if (hand[i].Rank == "Ace")
+                                {
+                                    numAces++;
+                                }
+
+                                while (numAces > 0 && handTotal > 21)
+                                {
+                                    handTotal -= 10;
+                                    numAces--;
+                                }
+                            }
+                        }
+
+                        MMMServer.packet = MMMServer.sendPacket(1, handTotal.ToString());
+                    }
                     break;
 
                 //Request for card count
                 case 4:
                     if (data[0] == "Player")
                     {
-                        MMMServer.packet = MMMServer.sendPacket(2, playerHand.Count.ToString());
+                        MMMServer.packet = MMMServer.sendPacket(2, hand.Count.ToString());
                         MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
                     }
                     else if (data[0] == "Dealer")
@@ -287,7 +331,7 @@ namespace CasinoLibrary
                         }
                         else if (data[1] == "Blackjack")
                         {
-                            MMMServer.packet = MMMServer.sendPacket(3, IsBlackJack(playerHand).ToString());
+                            MMMServer.packet = MMMServer.sendPacket(3, IsBlackJack(hand).ToString());
                         }
                     }
                     else if (data[0] == "Dealer")

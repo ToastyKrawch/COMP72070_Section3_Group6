@@ -52,6 +52,8 @@
             label1 = new Label();
             label7 = new Label();
             panel1 = new Panel();
+            label12 = new Label();
+            label15 = new Label();
             label13 = new Label();
             label14 = new Label();
             label11 = new Label();
@@ -347,6 +349,8 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(128, 64, 64, 64);
+            panel1.Controls.Add(label12);
+            panel1.Controls.Add(label15);
             panel1.Controls.Add(label13);
             panel1.Controls.Add(label14);
             panel1.Controls.Add(label11);
@@ -361,12 +365,35 @@
             panel1.Size = new Size(780, 463);
             panel1.TabIndex = 39;
             // 
+            // label12
+            // 
+            label12.Anchor = AnchorStyles.None;
+            label12.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label12.ForeColor = Color.White;
+            label12.Location = new Point(270, 239);
+            label12.Name = "label12";
+            label12.Size = new Size(240, 32);
+            label12.TabIndex = 9;
+            label12.Text = "Hand Total:";
+            label12.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label15.ForeColor = Color.White;
+            label15.Location = new Point(328, 192);
+            label15.Name = "label15";
+            label15.Size = new Size(117, 37);
+            label15.TabIndex = 8;
+            label15.Text = "Player 2:";
+            // 
             // label13
             // 
             label13.Anchor = AnchorStyles.None;
             label13.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label13.ForeColor = Color.White;
-            label13.Location = new Point(456, 240);
+            label13.Location = new Point(536, 240);
             label13.Name = "label13";
             label13.Size = new Size(240, 32);
             label13.TabIndex = 7;
@@ -378,7 +405,7 @@
             label14.AutoSize = true;
             label14.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label14.ForeColor = Color.White;
-            label14.Location = new Point(528, 192);
+            label14.Location = new Point(608, 192);
             label14.Name = "label14";
             label14.Size = new Size(100, 37);
             label14.TabIndex = 6;
@@ -389,7 +416,7 @@
             label11.Anchor = AnchorStyles.None;
             label11.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label11.ForeColor = Color.White;
-            label11.Location = new Point(128, 280);
+            label11.Location = new Point(40, 280);
             label11.Name = "label11";
             label11.Size = new Size(176, 32);
             label11.TabIndex = 5;
@@ -401,7 +428,7 @@
             label10.Anchor = AnchorStyles.None;
             label10.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label10.ForeColor = Color.White;
-            label10.Location = new Point(96, 240);
+            label10.Location = new Point(8, 240);
             label10.Name = "label10";
             label10.Size = new Size(240, 32);
             label10.TabIndex = 4;
@@ -413,11 +440,11 @@
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label9.ForeColor = Color.White;
-            label9.Location = new Point(168, 192);
+            label9.Location = new Point(96, 192);
             label9.Name = "label9";
-            label9.Size = new Size(95, 37);
+            label9.Size = new Size(67, 37);
             label9.TabIndex = 3;
-            label9.Text = "Player:";
+            label9.Text = "You:";
             // 
             // button2
             // 
@@ -564,5 +591,7 @@
         private Label label13;
         private Label label14;
         private PictureBox pictureBox11;
+        private Label label12;
+        private Label label15;
     }
 }

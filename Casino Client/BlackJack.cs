@@ -19,21 +19,54 @@ namespace Casino_Client
         private PlayerInfo player;
         TCPClient client;
 
-        private int numPlayerCards;
-        private int numDealerCards;
-        private int numDealerTotalCards = 2;
+        private List<Image> p1Hand;
+        private string p1HandTotal;
+        private int numPlayer1Cards;
+        List<PictureBox> playerCards;
+
+        private List<Image> p2Hand;
+        private string p2HandTotal;
+        private string p2HandTotal2Cards;
+        private int numPlayer2Cards;
+        private int numPlayer2TotalCards = 2;
+
+        private List<Image> p3Hand;
+        private string p3HandTotal;
+        private int numPlayer3Cards;
+        private int numPlayer3TotalCards;
+
+        private List<Image> p4Hand;
+        private string p4HandTotal;
+        private int numPlayer4Cards;
+        private int numPlayer4TotalCards;
+
+        List<PictureBox> botCards;
 
         List<PictureBox> dealerCards;
+        private int numDealerCards;
+        private int numDealerTotalCards = 2;
 
         public BlackJack(PlayerInfo p, TCPClient c)
         {
             player = p;
             client = c;
 
-            numPlayerCards = 0;
+            p1Hand = new List<Image>();
+            p2Hand = new List<Image>();
+            p3Hand = new List<Image>();
+            p4Hand = new List<Image>();
+
+            p1HandTotal = "";
+            p2HandTotal = "";
+            p3HandTotal = "";
+            p4HandTotal = "";
+
+            numPlayer1Cards = 0;
             numDealerCards = 0;
 
             dealerCards = new List<PictureBox>();
+            botCards = new List<PictureBox>();
+            playerCards = new List<PictureBox>();
 
             InitializeComponent();
             InitializeStartupScreen();
@@ -141,14 +174,6 @@ namespace Casino_Client
             button8.Hide();
         }
 
-        private void waitForBet(object sender, EventArgs e)
-        {
-            HideGameElements();
-            ShowBetElements();
-
-            player.bet = 0;
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             player.bet = 0;
@@ -248,6 +273,7 @@ namespace Casino_Client
             updateBet();
         }
 
+        //Initialize communications between client and server for a blackjack game
         private async void button10_Click(object sender, EventArgs e)
         {
             if (player.bet > 0)
@@ -259,20 +285,11 @@ namespace Casino_Client
                 //Send a request to start a game of blackjack
                 client.packet = client.sendPacket(1, player.bet.ToString() + "," + player.balance.ToString());
 
-                //Send a request for the player's first card
-                client.packet = client.sendPacket(0, "Player,1");
-                client.packet = client.receivePacket();
-                pictureBox9.Image = determineCard(0);
-
-                //Send a request for the player's second card
-                client.packet = client.sendPacket(0, "Player,2");
-                client.packet = client.receivePacket();
-                pictureBox10.Image = determineCard(0);
-
-                //Send a request for the player's hand total
-                client.packet = client.sendPacket(1, "Player,2");
-                client.packet = client.receivePacket();
-                label7.Text = client.dataPayloadString;
+                //Get the info from each player
+                p1HandTotal = getPlayerInfo(p1Hand);
+                client.packet = client.sendPacket(2, "Continue");   //Send a continue to the server to move on to next hand
+                p2HandTotal2Cards = getPlayerInfo(p2Hand);
+                p2HandTotal = p2HandTotal2Cards;
 
                 //Send a request for the dealer's second card
                 client.packet = client.sendPacket(0, "Dealer,2");
@@ -284,23 +301,20 @@ namespace Casino_Client
                 client.packet = client.receivePacket();
                 label1.Text = client.dataPayloadString;
 
-                numPlayerCards += 2;
+                numPlayer1Cards += 2;
                 numDealerCards += 2;
-
-                //Check to see if the player got blackjack
-                client.packet = client.sendPacket(5, "Player,Blackjack");   //Request game outcome
-                client.packet = client.receivePacket();                     //Receive game outcome
 
                 await dealCards();
 
-                if (client.dataPayloadString == "True")
+                if (p1HandTotal == "21")
                 {
-                    label7.Text = "BlackJack!";
+                    p1HandTotal = "BlackJack!";
                     label8.Text = "BlackJack!";
                     HideGameOptions();
 
+                    p2Turn();
                     dealerTurn();
-                    await revealDealerCards();
+                    await revealAllCards();
                 }
 
                 else
@@ -313,8 +327,80 @@ namespace Casino_Client
             }
         }
 
-        private async Task revealDealerCards()
+        private void p2Turn()
         {
+            //Send a request for player 2's card count
+            client.packet = client.sendPacket(4, "Player");
+            client.packet = client.receivePacket();
+            numPlayer2TotalCards = Int32.Parse(client.dataPayloadString);
+
+            //Check to see if the player got blackjack
+            if (p2HandTotal == "21")
+            {
+                p2HandTotal = "BlackJack!";
+            }
+
+            //P2 loop for how many cards are left
+            else if (numPlayer2TotalCards > 2)
+            {
+                for (int i = 3; i <= numPlayer2TotalCards; i++)
+                {
+                    numPlayer2Cards++;
+                    client.packet = client.sendPacket(0, "Player," + i);
+                    client.packet = client.receivePacket();
+                    addBotCard(numPlayer2Cards);
+                }
+            }
+        }
+
+        private string getPlayerInfo(List<Image> hand)
+        {
+            //Send a request for the player's first card
+            client.packet = client.sendPacket(0, "Player,1");
+            client.packet = client.receivePacket();
+            hand.Add(determineCard(0));
+
+            //Send a request for the player's second card
+            client.packet = client.sendPacket(0, "Player,2");
+            client.packet = client.receivePacket();
+            hand.Add(determineCard(0));
+
+            //Send a request for the player's hand total
+            client.packet = client.sendPacket(1, "Player,2");
+            client.packet = client.receivePacket();
+            string handTotal = client.dataPayloadString;
+
+            return handTotal;
+        }
+
+        private async Task revealAllCards()
+        {
+            await Task.Delay(2000);
+            for (int i = 0; i < playerCards.Count; i++)
+            {
+                playerCards[i].Hide();
+            }
+            label2.Text = "P2 Cards";
+            label7.Text = p2HandTotal2Cards;
+            pictureBox9.Image = p2Hand[0];
+            pictureBox10.Image = p2Hand[1];
+
+            for (int i = 0; i < numPlayer2TotalCards - 2; i++)
+            {
+                await Task.Delay(1000);
+                botCards[i].Show();
+
+                //Send a request for the player's new hand total
+                client.packet = client.sendPacket(1, "Bot," + (i + 3));
+                client.packet = client.receivePacket();
+                label7.Text = client.dataPayloadString;
+            }
+
+            if (p2HandTotal == "21")
+            {
+                label7.Text = "Blackjack!";
+            }
+
             await Task.Delay(2000);
             pictureBox11.Hide();
             pictureBox7.Show();
@@ -323,6 +409,9 @@ namespace Casino_Client
             client.packet = client.sendPacket(1, "Dealer,2");
             client.packet = client.receivePacket();
             label1.Text = client.dataPayloadString;
+
+            //Continue to next player
+            client.packet = client.sendPacket(2, "Continue");
 
             for (int i = 0; i < numDealerCards - 2; i++) 
             {
@@ -334,6 +423,9 @@ namespace Casino_Client
                 client.packet = client.receivePacket();
                 label1.Text = client.dataPayloadString;
             }
+
+            //Continue to next player
+            client.packet = client.sendPacket(2, "Continue");
 
             if (label1.Text == "21")
             {
@@ -351,16 +443,60 @@ namespace Casino_Client
 
         private async Task dealCards()
         {
+            //P1 card 1
             await Task.Delay(1000);
+            pictureBox9.Image = p1Hand[0];
+            pictureBox9.Show();
+            await Task.Delay(1000);
+            pictureBox9.Hide();
+            label2.Text = "P2 Cards";
+
+            //P2 card 1
+            await Task.Delay(1000);
+            pictureBox9.Image = p2Hand[0];
+            pictureBox9.Show();
+            await Task.Delay(1000);
+            pictureBox9.Hide();
+            label2.Text = "Your Cards";
+
+            //Dealer card 1
+            pictureBox9.Image = p1Hand[0];
             pictureBox9.Show();
             await Task.Delay(1000);
             pictureBox11.Show();
+
+            //P1 card 1 and 2            
             await Task.Delay(1000);
+            pictureBox10.Image = p1Hand[1];
+            pictureBox10.Show();
+            await Task.Delay(1000);
+            pictureBox9.Hide();
+            pictureBox10.Hide();
+            label2.Text = "P2 Cards";
+
+            //P2 card 1 and 2
+            pictureBox9.Image = p2Hand[0];
+            pictureBox9.Show();
+            await Task.Delay(1000);
+            pictureBox10.Image = p2Hand[1];
+            pictureBox10.Show();
+            await Task.Delay(1000);
+            pictureBox9.Hide();
+            pictureBox10.Hide();
+            label2.Text = "Your Cards";
+
+            //Dealer card 2
+            pictureBox9.Image = p1Hand[0];
+            pictureBox9.Show();
+            pictureBox10.Image = p1Hand[1];
             pictureBox10.Show();
             await Task.Delay(1000);
             pictureBox8.Show();
+
+            //Show hand totals
             await Task.Delay(1000);
             label1.Show();
+            label7.Text = p1HandTotal;
             label7.Show();
             await Task.Delay(1000);
         }
@@ -603,44 +739,59 @@ namespace Casino_Client
         {
             //Run initial hit communications
             client.packet = client.sendPacket(3, "H");                                      //Send decision
-            numPlayerCards++;
-            client.packet = client.sendPacket(0, "Player," + numPlayerCards.ToString());    //Request next card
+            numPlayer1Cards++;
+            client.packet = client.sendPacket(0, "Player," + numPlayer1Cards.ToString());    //Request next card
             client.packet = client.receivePacket();                                         //Receive next card
-            addPlayerCard();
+            addPlayerCard(numPlayer1Cards);
 
             //Check to see if the player has bust
             client.packet = client.sendPacket(5, "Player,Bust");    //Request game outcome
             client.packet = client.receivePacket();                 //Receive game outcome
-            if (client.dataPayloadString == "True")
-            {
-                label8.Text = "You Have Bust";
-                HideGameOptions();
-
-                dealerTurn();
-                await revealDealerCards();
-            }
+            string isBust = client.dataPayloadString;
 
             //Check to see if the player got blackjack
             client.packet = client.sendPacket(5, "Player,Blackjack");   //Request game outcome
             client.packet = client.receivePacket();                     //Receive game outcome
-            if (client.dataPayloadString == "True")
+            string isBJ = client.dataPayloadString;
+
+            if (isBust == "True")
             {
+                client.packet = client.sendPacket(2, "Continue");
+                
+                label8.Text = "You Have Bust";
+                HideGameOptions();
+
+                p2Turn();
+                dealerTurn();
+                await revealAllCards();
+            }
+
+            
+            else if (isBJ == "True")
+            {
+                client.packet = client.sendPacket(2, "Continue");
+
                 label7.Text = "Blackjack!";
                 label8.Text = "BlackJack!";
                 HideGameOptions();
 
+                p2Turn();
                 dealerTurn();
-                await revealDealerCards();
+                await revealAllCards();
             }
 
-            client.packet = client.sendPacket(2, "Information received successfully, continue"); //Tell server to continue
+            else
+            {
+                client.packet = client.sendPacket(2, "Continue");
+            }
         }
 
         private async Task endScreen()
         {
             await Task.Delay(1000);
 
-            label10.Text = "Hand Total: " + label7.Text;
+            label10.Text = "Hand Total: " + p1HandTotal;
+            label12.Text = "Hand Total: " + p2HandTotal;
             label13.Text = "Hand Total: " + label1.Text;
             label6.Text = "Balance: " + player.balance;
             player.bet = 0;
@@ -666,15 +817,15 @@ namespace Casino_Client
             label8.Hide();
         }
 
-        private void addPlayerCard()
+        private void addPlayerCard(int numCards)
         {
             PictureBox pictureBox = new PictureBox();
 
-            if (numPlayerCards == 3)
+            if (numCards == 3)
             {
                 pictureBox.Location = new Point(375, 274);
             }
-            else if (numPlayerCards == 4)
+            else if (numCards == 4)
             {
                 pictureBox.Location = new Point(499, 274);
             }
@@ -691,6 +842,7 @@ namespace Casino_Client
             this.Controls.Add(pictureBox);
             pictureBox.BringToFront();
             pictureBox.Show();
+            playerCards.Add(pictureBox);
 
             client.packet = client.sendPacket(1, "Player"); //Request hand value
 
@@ -698,6 +850,7 @@ namespace Casino_Client
 
             string[] data = client.dataPayloadString.Split(',');
             label7.Text = data[0];
+            p1HandTotal = label7.Text;
         }
 
         private void addDealerCard()
@@ -726,8 +879,37 @@ namespace Casino_Client
             pictureBox.Hide();
 
             dealerCards.Add(pictureBox);
+        }
 
-            string[] data = client.dataPayloadString.Split(',');
+        private void addBotCard(int numCards)
+        {
+            PictureBox pictureBox = new PictureBox();
+
+            if (numCards == 1)
+            {
+                pictureBox.Location = new Point(375, 274);
+            }
+            else if (numCards == 2)
+            {
+                pictureBox.Location = new Point(499, 274);
+            }
+            else
+            {
+                pictureBox.Location = new Point(623, 274);
+            }
+            pictureBox.BackColor = Color.Transparent;
+            pictureBox.Size = new Size(136, 168);
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox.TabStop = false;
+            pictureBox.Image = determineCard(0);
+            this.Controls.Add(pictureBox);
+            pictureBox.BringToFront();
+            pictureBox.Hide();
+
+            botCards.Add(pictureBox);
+
+            string[] cardInfo = client.dataPayloadString.Split(',');
+            p2HandTotal = (Int32.Parse(p2HandTotal) + Int32.Parse(cardInfo[2])).ToString(); ;
         }
 
         //Stand button
@@ -737,16 +919,13 @@ namespace Casino_Client
 
             HideGameOptions();
 
+            p2Turn();
             dealerTurn();
-            await revealDealerCards();
+            await revealAllCards();
         }
 
         private void dealerTurn()
         {
-            //Wait for the server to be ready
-            client.packet = client.sendPacket(2, "You can now run the rest of the game");
-            client.packet = client.receivePacket();
-
             //Send a request for the dealer's first card
             client.packet = client.sendPacket(0, "Dealer,1");
             client.packet = client.receivePacket();
@@ -809,9 +988,27 @@ namespace Casino_Client
         {
             client.packet = client.sendPacket(2, "Information received successfully, continue");
 
-            numPlayerCards = 0;
+            numPlayer1Cards = 0;
+            numPlayer2Cards = 0;
+            numPlayer3Cards = 0;
+            numPlayer4Cards = 0;
             numDealerCards = 0;
+
             dealerCards = new List<PictureBox>();
+            botCards = new List<PictureBox>();
+            playerCards = new List<PictureBox>();
+            
+            p1Hand = new List<Image>();
+            p2Hand = new List<Image>();
+            p3Hand = new List<Image>();
+            p4Hand = new List<Image>();
+
+            p1HandTotal = "";
+            p2HandTotal = "";
+            p3HandTotal = "";
+            p4HandTotal = "";
+
+            label2.Text = "Your Cards";
 
             updateBet();
 

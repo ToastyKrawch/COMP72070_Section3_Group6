@@ -119,6 +119,12 @@ namespace CasinoLibrary
                     BlackjackGame BJG = new BlackjackGame(this, p);
                     BJG.StartGame();
                     break;
+                case 2:
+                    Console.WriteLine("Player has joined the roulette table. Initializing a new game...");
+
+                    RouletteGame RG = new RouletteGame(this, p);
+                    RG.listen();
+                    break;
             }
         }
     }

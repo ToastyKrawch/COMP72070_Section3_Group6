@@ -61,8 +61,11 @@
             label9 = new Label();
             button5 = new Button();
             panel2 = new Panel();
+            pictureBox11 = new PictureBox();
+            pictureBox10 = new PictureBox();
             label7 = new Label();
             label8 = new Label();
+            pictureBox9 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
@@ -73,6 +76,9 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox11).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox10).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox9).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -454,12 +460,34 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(128, 32, 32, 32);
+            panel2.Controls.Add(pictureBox11);
+            panel2.Controls.Add(pictureBox10);
             panel2.Controls.Add(label7);
             panel2.Controls.Add(label8);
-            panel2.Location = new Point(0, 56);
+            panel2.Location = new Point(0, 16);
             panel2.Name = "panel2";
             panel2.Size = new Size(984, 158);
             panel2.TabIndex = 0;
+            // 
+            // pictureBox11
+            // 
+            pictureBox11.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox11.Location = new Point(848, 24);
+            pictureBox11.Name = "pictureBox11";
+            pictureBox11.Size = new Size(120, 112);
+            pictureBox11.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox11.TabIndex = 11;
+            pictureBox11.TabStop = false;
+            // 
+            // pictureBox10
+            // 
+            pictureBox10.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox10.Location = new Point(16, 24);
+            pictureBox10.Name = "pictureBox10";
+            pictureBox10.Size = new Size(120, 112);
+            pictureBox10.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox10.TabIndex = 10;
+            pictureBox10.TabStop = false;
             // 
             // label7
             // 
@@ -483,6 +511,16 @@
             label8.Size = new Size(0, 86);
             label8.TabIndex = 0;
             label8.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox9
+            // 
+            pictureBox9.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox9.Location = new Point(48, 400);
+            pictureBox9.Name = "pictureBox9";
+            pictureBox9.Size = new Size(68, 56);
+            pictureBox9.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox9.TabIndex = 44;
+            pictureBox9.TabStop = false;
             // 
             // Roulette
             // 
@@ -514,6 +552,7 @@
             Controls.Add(spinbutton);
             Controls.Add(pictureBox1);
             Controls.Add(pictureBox2);
+            Controls.Add(pictureBox9);
             ForeColor = SystemColors.ControlLight;
             Name = "Roulette";
             Text = "Roulette";
@@ -528,6 +567,9 @@
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox11).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox10).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox9).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -569,5 +611,8 @@
         private Label label15;
         private Label label14;
         private Label label13;
+        private PictureBox pictureBox9;
+        private PictureBox pictureBox10;
+        private PictureBox pictureBox11;
     }
 }

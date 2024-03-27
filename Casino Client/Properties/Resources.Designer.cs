@@ -183,6 +183,16 @@ namespace Casino_Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ConservativePFP {
+            get {
+                object obj = ResourceManager.GetObject("ConservativePFP", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap EightClubs {
             get {
                 object obj = ResourceManager.GetObject("EightClubs", resourceCulture);
@@ -416,6 +426,16 @@ namespace Casino_Client.Properties {
         internal static System.Drawing.Bitmap NineSpades {
             get {
                 object obj = ResourceManager.GetObject("NineSpades", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ProfileDefault {
+            get {
+                object obj = ResourceManager.GetObject("ProfileDefault", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

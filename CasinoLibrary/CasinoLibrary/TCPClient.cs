@@ -27,7 +27,7 @@ namespace CasinoLibrary
 
             //Setup stream and buffers
             stream = client.GetStream();
-            RxBytes = new byte[4096];
+            RxBytes = new byte[131072];
             bytesRead = 0;
             dataPayloadString = "";
 
@@ -54,11 +54,37 @@ namespace CasinoLibrary
             return packet;
         }
 
+        public CasinoPacket receiveImagePacket()
+        {
+            // It's assumed that the caller knows that the next packet will be an image.
+            bytesRead = stream.Read(RxBytes, 0, RxBytes.Length);
+
+            // Here, we are not converting the data to a string since it's binary data for the image
+            packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
+
+            // Log receipt of the packet but don't attempt to process it as a string
+            Console.WriteLine($"Received image packet: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={packet.Timestamp}");
+
+            return packet;
+        }
+
         public CasinoPacket sendPacket(byte type, string message)
         {
             //Setup TxBytes
             byte[] dataPayload = Encoding.UTF8.GetBytes(message);
 
+            //Setup packet
+            packet.setPacket(27000, 27000, type, dataPayload);
+
+            // Serialize and send the packet
+            TxBytes = packet.Serialize();
+            stream.Write(TxBytes, 0, TxBytes.Length);
+
+            return packet;
+        }
+
+        public CasinoPacket sendImagePacket(byte type, byte[] dataPayload)
+        {
             //Setup packet
             packet.setPacket(27000, 27000, type, dataPayload);
 

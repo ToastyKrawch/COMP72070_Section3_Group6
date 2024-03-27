@@ -39,8 +39,8 @@ namespace CasinoLibrary
         protected void InitializeNonNetworkResources()
         {
             // Setup buffers and any other non-network resources here
-            RxBytes = new byte[4096];
-            TxBytes = new byte[4096];
+            RxBytes = new byte[131072];
+            TxBytes = new byte[131072];
             dataPayloadString = "";
             byte[] dataPayload = Encoding.UTF8.GetBytes("Mock");
             packet = new CasinoPacket(27000, 27000, 100, dataPayload);
@@ -79,10 +79,40 @@ namespace CasinoLibrary
             return packet;
         }
 
+        public virtual CasinoPacket receiveImagePacket()
+        {
+            // It's assumed that the caller knows that the next packet will be an image.
+            bytesRead = stream.Read(RxBytes, 0, RxBytes.Length);
+
+            // Here, we are not converting the data to a string since it's binary data for the image
+            packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
+
+            // Log receipt of the packet but don't attempt to process it as a string
+            Console.WriteLine($"Received image packet: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={packet.Timestamp}");
+
+            return packet;
+        }
+
+
         public virtual CasinoPacket sendPacket(byte type, string message)
         {
             //Setup TxBytes
             byte[] dataPayload = Encoding.UTF8.GetBytes(message);
+
+            //Setup packet
+            packet.setPacket(27000, 27000, type, dataPayload);
+
+            // Serialize and send the packet
+            TxBytes = packet.Serialize();
+            stream.Write(TxBytes, 0, TxBytes.Length);
+
+            return packet;
+        }
+
+        public virtual CasinoPacket sendImagePacket(byte type, string imagePath)
+        {
+            // Read the image into a byte array
+            byte[] dataPayload = File.ReadAllBytes(imagePath);
 
             //Setup packet
             packet.setPacket(27000, 27000, type, dataPayload);
@@ -125,7 +155,26 @@ namespace CasinoLibrary
                     RouletteGame RG = new RouletteGame(this, p);
                     RG.listen();
                     break;
+                case 3:
+                    Console.WriteLine("Request to change profile picture, saving image...");
+                    packet = receiveImagePacket();
+                    SaveImage(packet.DataPayload);
+                    break;
+                case 4:
+                    Console.WriteLine("Request for profile picture, sending image...");
+                    packet = sendImagePacket(0, "../../../Saved Images/ProfilePic.jpg");
+                    break;
             }
+        }
+
+        private void SaveImage(byte[] imageData)
+        {
+            // Determine the path where you want to save the image
+            string imagePath = "../../../Saved Images/ProfilePic.jpg";
+
+            // Write the binary data to a file
+            File.WriteAllBytes(imagePath, imageData);
+            Console.WriteLine($"Image saved to {imagePath}");
         }
     }
 }

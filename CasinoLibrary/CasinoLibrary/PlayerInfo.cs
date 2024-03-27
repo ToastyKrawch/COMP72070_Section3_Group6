@@ -58,6 +58,30 @@ namespace CasinoLibrary
                             break;
                     }
                     break;
+
+                case 1:
+                    switch(result) 
+                    {
+                        //1 to 1 payout
+                        case 0:
+                            balance -= bet;
+                            winnings = bet * 2;
+                            balance += winnings;
+                            break;
+                        //Number
+                        case 1:
+                            balance -= bet;
+                            winnings = bet * 36;
+                            balance += winnings;
+                            break;
+                        //Lose
+                        default:
+                            balance -= bet;
+                            winnings = 0;
+                            balance += winnings;
+                            break;
+                    }
+                    break;
             }
         }
     }

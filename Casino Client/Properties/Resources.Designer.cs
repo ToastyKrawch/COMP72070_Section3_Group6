@@ -103,6 +103,16 @@ namespace Casino_Client.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BallIndicator {
+            get {
+                object obj = ResourceManager.GetObject("BallIndicator", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Chip1 {
             get {
                 object obj = ResourceManager.GetObject("Chip1", resourceCulture);
@@ -156,6 +166,16 @@ namespace Casino_Client.Properties {
         internal static System.Drawing.Bitmap Chip500 {
             get {
                 object obj = ResourceManager.GetObject("Chip500", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ChipEmpty {
+            get {
+                object obj = ResourceManager.GetObject("ChipEmpty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -446,6 +466,26 @@ namespace Casino_Client.Properties {
         internal static System.Drawing.Bitmap ReverseSide {
             get {
                 object obj = ResourceManager.GetObject("ReverseSide", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RouletteTable {
+            get {
+                object obj = ResourceManager.GetObject("RouletteTable", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rouletteWheel {
+            get {
+                object obj = ResourceManager.GetObject("rouletteWheel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

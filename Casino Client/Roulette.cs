@@ -29,12 +29,16 @@ namespace Casino_Client
         private string wheelOutcome;
         private string gameOutcome;
 
-        public Roulette(PlayerInfo p, TCPClient c)
+        public Roulette(PlayerInfo p, TCPClient c, Image pfp)
         {
             player = p;
             client = c;
 
             InitializeComponent();
+
+            pictureBox9.Image = pfp;
+            pictureBox10.Image = pfp;
+            pictureBox11.Image = pfp;
 
             label3.Text = player.balance.ToString();
             label4.Text = player.bet.ToString();
@@ -219,7 +223,7 @@ namespace Casino_Client
             player.bet = 0;
 
             this.Close();
-            var newForm = new MainMenu(player, client);
+            var newForm = new MainMenu(player, client, pictureBox9.Image);
             newForm.Show();
         }
 
@@ -440,6 +444,7 @@ namespace Casino_Client
             }
         }
 
+        //Continue click event 
         private void button5_Click(object sender, EventArgs e)
         {
             panel1.Hide();

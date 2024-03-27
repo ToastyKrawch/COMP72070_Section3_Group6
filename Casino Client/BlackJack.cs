@@ -18,6 +18,7 @@ namespace Casino_Client
     {
         private PlayerInfo player;
         TCPClient client;
+        Image pfp;
 
         private List<Image> p1Hand;
         private string p1HandTotal;
@@ -46,10 +47,11 @@ namespace Casino_Client
         private int numDealerCards;
         private int numDealerTotalCards = 2;
 
-        public BlackJack(PlayerInfo p, TCPClient c)
+        public BlackJack(PlayerInfo p, TCPClient c, Image pfp)
         {
             player = p;
             client = c;
+            this.pfp = pfp;
 
             p1Hand = new List<Image>();
             p2Hand = new List<Image>();
@@ -70,6 +72,10 @@ namespace Casino_Client
 
             InitializeComponent();
             InitializeStartupScreen();
+
+            pictureBox12.Image = pfp;
+            pictureBox13.Image = pfp;
+            pictureBox12.BackColor = Color.Transparent;
         }
 
         private void InitializeStartupScreen()
@@ -115,6 +121,9 @@ namespace Casino_Client
 
             // Show bet elements
             ShowBetElements();
+
+            pictureBox12.Show();
+            pictureBox12.Location = new Point(24, 216);
         }
 
         private void btnGoBack_Click(object? sender, EventArgs e)
@@ -122,7 +131,7 @@ namespace Casino_Client
             player.bet = 0;
 
             this.Close();
-            var newForm = new MainMenu(player, client);
+            var newForm = new MainMenu(player, client, pictureBox12.Image);
             newForm.Show();
         }
 
@@ -179,7 +188,7 @@ namespace Casino_Client
             player.bet = 0;
 
             this.Close();
-            var newForm = new MainMenu(player, client);
+            var newForm = new MainMenu(player, client, pictureBox12.Image);
             newForm.Show();
         }
 
@@ -212,6 +221,10 @@ namespace Casino_Client
             button3.Show();
             button10.Show();
             button11.Show();
+
+            pictureBox12.Image = pfp;
+            pictureBox12.Location = new Point(24, 216);
+            pictureBox12.Show();
         }
 
         private void updateBet()
@@ -281,6 +294,9 @@ namespace Casino_Client
                 HideBetElements();
                 ShowGameElements();
                 UpdateBalance();
+
+                pictureBox12.Location = new Point(16, 232);
+                pictureBox12.Show();
 
                 //Send a request to start a game of blackjack
                 client.packet = client.sendPacket(1, player.bet.ToString() + "," + player.balance.ToString());
@@ -382,6 +398,7 @@ namespace Casino_Client
             }
             label2.Text = "P2 Cards";
             label7.Text = p2HandTotal2Cards;
+            pictureBox12.Image = Properties.Resources.ConservativePFP;
             pictureBox9.Image = p2Hand[0];
             pictureBox10.Image = p2Hand[1];
 
@@ -450,6 +467,7 @@ namespace Casino_Client
             await Task.Delay(1000);
             pictureBox9.Hide();
             label2.Text = "P2 Cards";
+            pictureBox12.Image = Properties.Resources.ConservativePFP;
 
             //P2 card 1
             await Task.Delay(1000);
@@ -460,6 +478,7 @@ namespace Casino_Client
             label2.Text = "Your Cards";
 
             //Dealer card 1
+            pictureBox12.Image = pfp;
             pictureBox9.Image = p1Hand[0];
             pictureBox9.Show();
             await Task.Delay(1000);
@@ -475,6 +494,7 @@ namespace Casino_Client
             label2.Text = "P2 Cards";
 
             //P2 card 1 and 2
+            pictureBox12.Image = Properties.Resources.ConservativePFP;
             pictureBox9.Image = p2Hand[0];
             pictureBox9.Show();
             await Task.Delay(1000);
@@ -486,6 +506,7 @@ namespace Casino_Client
             label2.Text = "Your Cards";
 
             //Dealer card 2
+            pictureBox12.Image = pfp;
             pictureBox9.Image = p1Hand[0];
             pictureBox9.Show();
             pictureBox10.Image = p1Hand[1];
@@ -986,8 +1007,6 @@ namespace Casino_Client
         //Restarts the game
         private void button1_Click(object sender, EventArgs e)
         {
-            client.packet = client.sendPacket(2, "Information received successfully, continue");
-
             numPlayer1Cards = 0;
             numPlayer2Cards = 0;
             numPlayer3Cards = 0;

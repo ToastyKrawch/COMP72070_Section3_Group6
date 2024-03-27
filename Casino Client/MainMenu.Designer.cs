@@ -33,6 +33,9 @@
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
+            button4 = new Button();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -64,9 +67,9 @@
             button1.BackColor = SystemColors.ActiveCaptionText;
             button1.Font = new Font("Showcard Gothic", 15.75F);
             button1.ForeColor = SystemColors.ButtonHighlight;
-            button1.Location = new Point(135, 221);
+            button1.Location = new Point(160, 200);
             button1.Name = "button1";
-            button1.Size = new Size(149, 96);
+            button1.Size = new Size(488, 80);
             button1.TabIndex = 2;
             button1.Text = "Blackjack";
             button1.UseVisualStyleBackColor = false;
@@ -79,9 +82,9 @@
             button2.BackColor = SystemColors.ActiveCaptionText;
             button2.Font = new Font("Showcard Gothic", 15.75F);
             button2.ForeColor = SystemColors.ButtonHighlight;
-            button2.Location = new Point(315, 221);
+            button2.Location = new Point(160, 312);
             button2.Name = "button2";
-            button2.Size = new Size(149, 96);
+            button2.Size = new Size(488, 80);
             button2.TabIndex = 3;
             button2.Text = "Roulette";
             button2.UseVisualStyleBackColor = false;
@@ -94,13 +97,38 @@
             button3.BackColor = SystemColors.ActiveCaptionText;
             button3.Font = new Font("Showcard Gothic", 15.75F);
             button3.ForeColor = SystemColors.ButtonHighlight;
-            button3.Location = new Point(488, 221);
+            button3.Location = new Point(8, 8);
             button3.Name = "button3";
-            button3.Size = new Size(149, 96);
+            button3.Size = new Size(72, 37);
             button3.TabIndex = 4;
             button3.Text = "QUIT";
             button3.UseVisualStyleBackColor = false;
             button3.Click += button3_Click;
+            // 
+            // button4
+            // 
+            button4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            button4.AutoSize = true;
+            button4.BackColor = SystemColors.ActiveCaptionText;
+            button4.Font = new Font("Showcard Gothic", 15.75F);
+            button4.ForeColor = SystemColors.ButtonHighlight;
+            button4.Location = new Point(680, 112);
+            button4.Name = "button4";
+            button4.Size = new Size(116, 37);
+            button4.TabIndex = 5;
+            button4.Text = "Settings";
+            button4.UseVisualStyleBackColor = false;
+            button4.Click += button4_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Location = new Point(688, 16);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(100, 88);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 6;
+            pictureBox1.TabStop = false;
             // 
             // MainMenu
             // 
@@ -108,6 +136,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Green;
             ClientSize = new Size(800, 450);
+            Controls.Add(pictureBox1);
+            Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -117,6 +147,7 @@
             Text = "MainMenu";
             Load += MainMenu_Load;
             Resize += MainMenu_Resize;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -128,5 +159,7 @@
         private Button button1;
         private Button button2;
         private Button button3;
+        private Button button4;
+        private PictureBox pictureBox1;
     }
 }

@@ -25,11 +25,13 @@ namespace Casino_Client
         private PlayerInfo player;
         TCPClient client;
 
-        public MainMenu(PlayerInfo p, TCPClient c)
+        public MainMenu(PlayerInfo p, TCPClient c, Image pfp)
         {
             InitializeComponent();
             player = p;
             client = c;
+
+            pictureBox1.Image = pfp;
         }
 
         private void MainMenu_Load(object sender, EventArgs e)
@@ -70,14 +72,14 @@ namespace Casino_Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var newform = new BlackJack(player, client);
+            var newform = new BlackJack(player, client, pictureBox1.Image);
             this.Hide();
             newform.Show();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var newform = new Roulette(player, client);
+            var newform = new Roulette(player, client, pictureBox1.Image);
             this.Hide();
             newform.Show();
         }
@@ -85,6 +87,13 @@ namespace Casino_Client
         private void button3_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            var newform = new Settings(player, client, pictureBox1.Image);
+            this.Hide();
+            newform.Show();
         }
     }
 }

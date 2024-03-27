@@ -52,6 +52,8 @@
             label1 = new Label();
             label7 = new Label();
             panel1 = new Panel();
+            pictureBox14 = new PictureBox();
+            pictureBox13 = new PictureBox();
             label12 = new Label();
             label15 = new Label();
             label13 = new Label();
@@ -64,6 +66,7 @@
             panel2 = new Panel();
             label8 = new Label();
             pictureBox11 = new PictureBox();
+            pictureBox12 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
@@ -75,8 +78,11 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox9).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox10).BeginInit();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox14).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox13).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox11).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox12).BeginInit();
             SuspendLayout();
             // 
             // button3
@@ -148,7 +154,7 @@
             button10.Enabled = false;
             button10.Font = new Font("Georgia", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             button10.ForeColor = Color.DarkRed;
-            button10.Location = new Point(374, 205);
+            button10.Location = new Point(416, 208);
             button10.Name = "button10";
             button10.Size = new Size(214, 75);
             button10.TabIndex = 21;
@@ -243,22 +249,22 @@
             // 
             // label5
             // 
-            label5.AutoSize = true;
             label5.BackColor = Color.Transparent;
             label5.Font = new Font("Segoe UI", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label5.ForeColor = SystemColors.ButtonFace;
-            label5.Location = new Point(347, 113);
+            label5.Location = new Point(288, 112);
             label5.Name = "label5";
-            label5.Size = new Size(72, 86);
+            label5.Size = new Size(216, 86);
             label5.TabIndex = 30;
             label5.Text = "0";
+            label5.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // button11
             // 
             button11.BackColor = Color.Olive;
             button11.Font = new Font("Georgia", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             button11.ForeColor = SystemColors.ButtonHighlight;
-            button11.Location = new Point(127, 205);
+            button11.Location = new Point(169, 208);
             button11.Name = "button11";
             button11.Size = new Size(214, 75);
             button11.TabIndex = 31;
@@ -349,6 +355,8 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(128, 64, 64, 64);
+            panel1.Controls.Add(pictureBox14);
+            panel1.Controls.Add(pictureBox13);
             panel1.Controls.Add(label12);
             panel1.Controls.Add(label15);
             panel1.Controls.Add(label13);
@@ -364,6 +372,27 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(780, 463);
             panel1.TabIndex = 39;
+            // 
+            // pictureBox14
+            // 
+            pictureBox14.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox14.Image = Properties.Resources.ConservativePFP;
+            pictureBox14.Location = new Point(264, 192);
+            pictureBox14.Name = "pictureBox14";
+            pictureBox14.Size = new Size(48, 40);
+            pictureBox14.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox14.TabIndex = 11;
+            pictureBox14.TabStop = false;
+            // 
+            // pictureBox13
+            // 
+            pictureBox13.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox13.Location = new Point(32, 192);
+            pictureBox13.Name = "pictureBox13";
+            pictureBox13.Size = new Size(48, 40);
+            pictureBox13.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox13.TabIndex = 10;
+            pictureBox13.TabStop = false;
             // 
             // label12
             // 
@@ -503,6 +532,16 @@
             pictureBox11.TabIndex = 40;
             pictureBox11.TabStop = false;
             // 
+            // pictureBox12
+            // 
+            pictureBox12.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox12.Location = new Point(24, 208);
+            pictureBox12.Name = "pictureBox12";
+            pictureBox12.Size = new Size(80, 72);
+            pictureBox12.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox12.TabIndex = 41;
+            pictureBox12.TabStop = false;
+            // 
             // BlackJack
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -533,6 +572,7 @@
             Controls.Add(label2);
             Controls.Add(button3);
             Controls.Add(pictureBox11);
+            Controls.Add(pictureBox12);
             ForeColor = Color.Red;
             Name = "BlackJack";
             Text = "BlackJack";
@@ -548,8 +588,11 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox10).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox14).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox13).EndInit();
             panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox11).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox12).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -593,5 +636,8 @@
         private PictureBox pictureBox11;
         private Label label12;
         private Label label15;
+        private PictureBox pictureBox12;
+        private PictureBox pictureBox14;
+        private PictureBox pictureBox13;
     }
 }

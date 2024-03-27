@@ -15,7 +15,7 @@ namespace CasinoLibrary
         public ushort DestinationPort { get; set; }
         public uint Timestamp { get; set; }
         public byte PacketType { get; set; }
-        public ushort PacketLength { get; set; }
+        public uint PacketLength { get; set; }
         public uint UniquePacketId { get; set; }
         public byte ProtocolVersion { get; set; } = 1; // Default protocol version
         public byte CompressionFlag { get; set; } = 0; // 0 = no compression, 1 = compressed
@@ -31,7 +31,7 @@ namespace CasinoLibrary
             PacketType = packetType;
             DataPayload = dataPayload;
             Timestamp = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            PacketLength = (ushort)(49 + dataPayload.Length);
+            PacketLength = (uint)(49 + dataPayload.Length);
             UniquePacketId = GenerateUniquePacketId();
             SecureAuthenticationToken = GenerateSecureAuthToken();
         }
@@ -75,14 +75,16 @@ namespace CasinoLibrary
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)DestinationPort)), 0, sizeof(short));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)Timestamp)), 0, sizeof(int));
                 memoryStream.Write(new byte[] { PacketType }, 0, sizeof(byte));
-                memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)PacketLength)), 0, sizeof(short));
+                memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)PacketLength)), 0, sizeof(int));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)UniquePacketId)), 0, sizeof(int));
                 memoryStream.Write(new byte[] { ProtocolVersion }, 0, sizeof(byte));
                 memoryStream.Write(new byte[] { CompressionFlag }, 0, sizeof(byte));
                 memoryStream.Write(SecureAuthenticationToken, 0, SecureAuthenticationToken.Length);
                 memoryStream.Write(DataPayload, 0, DataPayload.Length);
 
-                return memoryStream.ToArray();
+                byte[] serializedData = memoryStream.ToArray();
+
+                return serializedData;
             }
         }
 
@@ -99,15 +101,17 @@ namespace CasinoLibrary
                 var destinationPort = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 var timestamp = (uint)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
                 var packetType = binaryReader.ReadByte();
-                var packetLength = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                if (packetLength < 0 || packetLength > data.Length)
+                var packetLengthNetworkOrder = binaryReader.ReadInt32();
+                var packetLength = (uint)IPAddress.NetworkToHostOrder(packetLengthNetworkOrder);
+
+                if (packetLength > data.Length)
                     throw new InvalidOperationException($"Invalid packet length: {packetLength}");
 
                 var uniquePacketId = (uint)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
                 var protocolVersion = binaryReader.ReadByte();
                 var compressionFlag = binaryReader.ReadByte();
                 var secureAuthToken = binaryReader.ReadBytes(32);
-                var dataPayloadLength = packetLength - 49;
+                var dataPayloadLength = (int)packetLength - 49;
 
                 if (dataPayloadLength < 0 || dataPayloadLength > memoryStream.Length - memoryStream.Position)
                     throw new InvalidOperationException($"Invalid data payload length: {dataPayloadLength}");
@@ -134,7 +138,7 @@ namespace CasinoLibrary
             PacketType = packetType;
             DataPayload = dataPayload;
             Timestamp = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            PacketLength = (ushort)(49 + dataPayload.Length);
+            PacketLength = (uint)(49 + dataPayload.Length);
             UniquePacketId = GenerateUniquePacketId();
             SecureAuthenticationToken = GenerateSecureAuthToken();
         }

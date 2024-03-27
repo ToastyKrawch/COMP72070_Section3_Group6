@@ -12,7 +12,7 @@ using System.Threading.Tasks;
  * 1 - Notify server to player is exiting "Some message saying player is leaving the table"
  * 
  * Sending
- * 0 - Send the result, "Player's winnings, Player's new balance, Game outcome"
+ * 0 - Send the result, "Player's winnings, Player's new balance, Game outcome(win or lose), Wheel outcome(e.i. 24 Black)"
  * 
  */
 
@@ -54,11 +54,15 @@ namespace CasinoLibrary
                 wheel.resultNum = Int32.Parse(data[3]);
                 wheel.spin();
 
+                //Update player info
+                PlayerInfo.bet = Int32.Parse(data[0]);
+                PlayerInfo.balance = Int32.Parse(data[1]);
+
                 //Compare player decision with wheel outcome
                 determineResult(data);
 
                 //Send the player's winnings, new balance, and the game's result
-                MMMServer.sendPacket(0, PlayerInfo.winnings + "," + PlayerInfo.balance + "," + gameResult);
+                MMMServer.packet = MMMServer.sendPacket(0, PlayerInfo.winnings + "," + PlayerInfo.balance + "," + gameResult + "," + wheel.outcome.number + " " + wheel.outcome.colour);
             }
         }
 

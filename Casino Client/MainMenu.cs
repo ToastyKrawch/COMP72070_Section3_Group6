@@ -77,7 +77,7 @@ namespace Casino_Client
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var newform = new Roulette();
+            var newform = new Roulette(player, client);
             this.Hide();
             newform.Show();
         }

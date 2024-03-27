@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +20,14 @@ namespace CasinoLibrary
         {
             number = resultNum;
             determineColour();
+            determineType();
         }
 
         internal void setOutcome(int resultNum)
         {
             number = resultNum;
             determineColour();
+            determineType();
         }
 
         void determineColour()
@@ -32,16 +35,73 @@ namespace CasinoLibrary
             if (number == 0)
             {
                 colour = Colour.green;
+            }
+            else if (number > 0 && number < 10)
+            {
+                if (number % 2 != 0)
+                {
+                    colour = Colour.red;
+                }
+                else
+                {
+                    colour = Colour.black;
+                }
+            }
+            else if (number < 12)
+            {
+                colour = Colour.black;
+            }
+            else if (number < 19)
+            {
+                if (number % 2 != 0)
+                {
+                    colour = Colour.black;
+                }
+                else
+                {
+                    colour = Colour.red;
+                }
+            }
+            else if (number < 28)
+            {
+                if (number % 2 != 0)
+                {
+                    colour = Colour.red;
+                }
+                else
+                {
+                    colour = Colour.black;
+                }
+            }
+            else if (number < 30)
+            {
+                colour = Colour.black;
+            }
+            else
+            {
+                if (number % 2 != 0)
+                {
+                    colour = Colour.black;
+                }
+                else
+                {
+                    colour = Colour.red;
+                }
+            }
+        }
+
+        void determineType()
+        {
+            if (number == 0) 
+            { 
                 type = Type.zero;
             }
-            else if (number / 2 == 1)
+            else if (number % 2 == 0)
             {
-                colour = Colour.red;
                 type = Type.even;
             }
             else
             {
-                colour = Colour.black;
                 type = Type.odd;
             }
         }

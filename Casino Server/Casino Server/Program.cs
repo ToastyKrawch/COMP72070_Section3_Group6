@@ -15,7 +15,7 @@ class Program
 
             MMMServer.packet = MMMServer.sendPacket(0, "\nHello Casino Client, Please select a game:\n1 for BlackJack\n2 for Roulette\n3 to Quit");
 
-            while (true)
+            while (MMMServer.connection)
             {
                 MMMServer.packet = MMMServer.receivePacket();
                 MMMServer.runProtocol(player);

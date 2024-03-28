@@ -1,0 +1,18 @@
+Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:03 PM, PacketType=0, 
+PacketLength=89, UniquePacketID=0, ProtocolVersion=1, CompressionFlag=0
+
+DataPayload: Hello, Casino Server!
+
+Sent packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:03 PM, PacketType=0, 
+PacketLength=152, UniquePacketID=89, ProtocolVersion=1, CompressionFlag=0
+
+DataPayload: Hello, Casino Server!
+
+Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:03 PM, PacketType=4, 
+PacketLength=94, UniquePacketID=152, ProtocolVersion=1, CompressionFlag=0
+
+DataPayload: Requesting profile picture
+
+Sent image packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:04 PM, PacketType=0, 
+PacketLength=120798, UniquePacketID=94, ProtocolVersion=1, CompressionFlag=0
+

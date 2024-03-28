@@ -13,7 +13,7 @@ namespace CasinoLibrary
     {
         public ushort SourcePort { get; set; }
         public ushort DestinationPort { get; set; }
-        public uint Timestamp { get; set; }
+        public byte[] Timestamp { get; set; }
         public byte PacketType { get; set; }
         public uint PacketLength { get; set; }
         public uint UniquePacketId { get; set; }
@@ -25,15 +25,16 @@ namespace CasinoLibrary
         private static byte[] secureKey = GenerateSecureKey();
 
         public CasinoPacket(ushort sourcePort, ushort destinationPort, byte packetType, byte[] dataPayload)
-        {
+        {   
             SourcePort = sourcePort;
             DestinationPort = destinationPort;
             PacketType = packetType;
             DataPayload = dataPayload;
-            Timestamp = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            PacketLength = (uint)(49 + dataPayload.Length);
+            Timestamp = Encoding.UTF8.GetBytes(DateTime.Now.ToString());
             UniquePacketId = GenerateUniquePacketId();
             SecureAuthenticationToken = GenerateSecureAuthToken();
+
+            PacketLength = (uint)(47 + Timestamp.Length + dataPayload.Length);
         }
 
         public static byte[] GenerateSecureKey(int keySize = 32)
@@ -49,7 +50,7 @@ namespace CasinoLibrary
         private uint GenerateUniquePacketId()
         {
             // Simple unique ID generation based on timestamp and source/dest ports
-            var hash = BitConverter.GetBytes(Timestamp).CombineWith(BitConverter.GetBytes(SourcePort), BitConverter.GetBytes(DestinationPort));
+            var hash = BitConverter.GetBytes(PacketLength).CombineWith(BitConverter.GetBytes(SourcePort), Timestamp);
             var uniqueId = BitConverter.ToUInt32(hash, 0);
             return uniqueId;
         }
@@ -58,7 +59,7 @@ namespace CasinoLibrary
         {
             // The message should contain data that you want to be authenticated
             // In this case, we'll just use the timestamp and the packet's unique ID
-            var message = BitConverter.GetBytes(Timestamp).CombineWith(BitConverter.GetBytes(UniquePacketId));
+            var message = Timestamp.CombineWith(BitConverter.GetBytes(UniquePacketId));
 
             using (var hmac = new HMACSHA256(secureKey))  // Use the secureKey directly
             {
@@ -73,7 +74,7 @@ namespace CasinoLibrary
                 // Convert each property to bytes and write to the MemoryStream
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)SourcePort)), 0, sizeof(short));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)DestinationPort)), 0, sizeof(short));
-                memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)Timestamp)), 0, sizeof(int));
+                memoryStream.Write((Timestamp), 0, Timestamp.Length);
                 memoryStream.Write(new byte[] { PacketType }, 0, sizeof(byte));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)PacketLength)), 0, sizeof(int));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)UniquePacketId)), 0, sizeof(int));
@@ -99,7 +100,7 @@ namespace CasinoLibrary
                 // Read each property from the MemoryStream
                 var sourcePort = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 var destinationPort = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                var timestamp = (uint)IPAddress.NetworkToHostOrder(binaryReader.ReadInt32());
+                var timestamp = binaryReader.ReadBytes(21);
                 var packetType = binaryReader.ReadByte();
                 var packetLengthNetworkOrder = binaryReader.ReadInt32();
                 var packetLength = (uint)IPAddress.NetworkToHostOrder(packetLengthNetworkOrder);
@@ -111,7 +112,7 @@ namespace CasinoLibrary
                 var protocolVersion = binaryReader.ReadByte();
                 var compressionFlag = binaryReader.ReadByte();
                 var secureAuthToken = binaryReader.ReadBytes(32);
-                var dataPayloadLength = (int)packetLength - 49;
+                var dataPayloadLength = (int)packetLength - (47 + 21);
 
                 if (dataPayloadLength < 0 || dataPayloadLength > memoryStream.Length - memoryStream.Position)
                     throw new InvalidOperationException($"Invalid data payload length: {dataPayloadLength}");
@@ -137,10 +138,10 @@ namespace CasinoLibrary
             DestinationPort = destinationPort;
             PacketType = packetType;
             DataPayload = dataPayload;
-            Timestamp = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            PacketLength = (uint)(49 + dataPayload.Length);
+            Timestamp = Encoding.UTF8.GetBytes(DateTime.Now.ToString());
             UniquePacketId = GenerateUniquePacketId();
             SecureAuthenticationToken = GenerateSecureAuthToken();
+            PacketLength = (uint)(47 + Timestamp.Length + dataPayload.Length);
         }
     }
 }

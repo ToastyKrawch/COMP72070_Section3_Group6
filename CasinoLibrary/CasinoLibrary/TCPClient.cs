@@ -20,6 +20,8 @@ namespace CasinoLibrary
         public string dataPayloadString;
         byte[] dataPayload;
 
+        string loggingPath;
+
         public TCPClient()
         {
             //Create a TcpClient
@@ -31,6 +33,10 @@ namespace CasinoLibrary
             bytesRead = 0;
             dataPayloadString = "";
 
+            //Setup logging file
+            loggingPath = "../../../ClientLogs.txt";
+            File.WriteAllText(loggingPath, String.Empty);
+
             //Setup the initial hello packet
             dataPayload = Encoding.UTF8.GetBytes("Hello, Casino Server!");
             packet = new CasinoPacket(27000, 27000, 0, dataPayload);
@@ -40,16 +46,34 @@ namespace CasinoLibrary
             stream.Write(TxBytes, 0, TxBytes.Length);
         }
 
+        private void log(int imageFlag, string transmissionType)
+        {
+            string headerInfo = $"{transmissionType}: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={DateTime.Parse(Encoding.UTF8.GetString(packet.Timestamp))}, PacketType={packet.PacketType}, " +
+                                $"\nPacketLength={packet.PacketLength}, UniquePacketID={packet.UniquePacketId}, ProtocolVersion={packet.ProtocolVersion}, CompressionFlag={packet.CompressionFlag}{Environment.NewLine}";
+
+            File.AppendAllText(loggingPath, headerInfo + Environment.NewLine);
+
+            if (imageFlag == 0)
+            {
+                File.AppendAllText(loggingPath, $"DataPayload: {dataPayloadString}{Environment.NewLine}{Environment.NewLine}");
+                Console.WriteLine($"DataPayload: {dataPayloadString}\n");
+            }
+
+            Console.WriteLine(headerInfo);
+        }
+
         public CasinoPacket receivePacket()
         {
-            //Setup packet
             bytesRead = stream.Read(RxBytes, 0, RxBytes.Length);
+
+            //Setup packet
             packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
 
             // Process packet
-            Console.WriteLine($"Received packet: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={packet.Timestamp}");
             dataPayloadString = Encoding.UTF8.GetString(packet.DataPayload);
-            Console.WriteLine($"DataPayload: {dataPayloadString}");
+
+            //Log packet
+            log(0, "Received packet");
 
             return packet;
         }
@@ -63,7 +87,7 @@ namespace CasinoLibrary
             packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
 
             // Log receipt of the packet but don't attempt to process it as a string
-            Console.WriteLine($"Received image packet: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={packet.Timestamp}");
+            log(1, "Received image packet");
 
             return packet;
         }
@@ -80,6 +104,9 @@ namespace CasinoLibrary
             TxBytes = packet.Serialize();
             stream.Write(TxBytes, 0, TxBytes.Length);
 
+            //Log the packet sent
+            log(0, "Sent packet");
+
             return packet;
         }
 
@@ -92,12 +119,14 @@ namespace CasinoLibrary
             TxBytes = packet.Serialize();
             stream.Write(TxBytes, 0, TxBytes.Length);
 
+            //Log the packet sent
+            log(1, "Sent image packet");
+
             return packet;
         }
 
         public void shutDown()
         {
-            stream.Close();
             client.Close();
         }
     }

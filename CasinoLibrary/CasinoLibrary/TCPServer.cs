@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
 
 namespace CasinoLibrary
 {
@@ -20,6 +21,9 @@ namespace CasinoLibrary
 
         public CasinoPacket packet;
         public string dataPayloadString;
+
+        string loggingPath;
+        public bool connection;
 
         public TCPServer()
         {
@@ -44,6 +48,7 @@ namespace CasinoLibrary
             dataPayloadString = "";
             byte[] dataPayload = Encoding.UTF8.GetBytes("Mock");
             packet = new CasinoPacket(27000, 27000, 100, dataPayload);
+            loggingPath = "../../../ServerLogs.txt";
         }
 
         private void SetupNetwork()
@@ -55,28 +60,57 @@ namespace CasinoLibrary
 
             //Setup Client
             client = server.AcceptTcpClient();
+            connection = true;
             Console.WriteLine("Connected!");
 
             //Setup stream
             stream = client.GetStream();
 
+            //Setup logging file
+            File.WriteAllText(loggingPath, String.Empty);
+
             //Receive the initial hello packet
             packet = receivePacket();
         }
 
+        private void log(int imageFlag, string transmissionType)
+        {
+            string headerInfo = $"{transmissionType}: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={DateTime.Parse(Encoding.UTF8.GetString(packet.Timestamp))}, PacketType={packet.PacketType}, " +
+                                $"\nPacketLength={packet.PacketLength}, UniquePacketID={packet.UniquePacketId}, ProtocolVersion={packet.ProtocolVersion}, CompressionFlag={packet.CompressionFlag}{Environment.NewLine}";
+
+            File.AppendAllText(loggingPath, headerInfo + Environment.NewLine);
+
+            if (imageFlag == 0) 
+            {
+                File.AppendAllText(loggingPath, $"DataPayload: {dataPayloadString}{Environment.NewLine}{Environment.NewLine}");
+                Console.WriteLine($"DataPayload: {dataPayloadString}\n");
+            }
+
+            Console.WriteLine(headerInfo);
+        }
+
         public virtual CasinoPacket receivePacket()
         {
-            bytesRead = stream.Read(RxBytes, 0, RxBytes.Length);
+            try
+            {
+                bytesRead = stream.Read(RxBytes, 0, RxBytes.Length);
 
-            //Setup packet
-            packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
+                //Setup packet
+                packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
 
-            // Process packet
-            Console.WriteLine($"Received packet: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={packet.Timestamp}");
-            dataPayloadString = Encoding.UTF8.GetString(packet.DataPayload);
-            Console.WriteLine($"DataPayload: {dataPayloadString}");
+                // Process packet
+                dataPayloadString = Encoding.UTF8.GetString(packet.DataPayload);
 
-            return packet;
+                //Log packet
+                log(0, "Received packet");
+
+                return packet;
+            }
+            catch 
+            {
+                packet.setPacket(27000, 27000, 0, [0]);
+                return packet;
+            }
         }
 
         public virtual CasinoPacket receiveImagePacket()
@@ -88,7 +122,7 @@ namespace CasinoLibrary
             packet = CasinoPacket.Deserialize(RxBytes[..bytesRead]);
 
             // Log receipt of the packet but don't attempt to process it as a string
-            Console.WriteLine($"Received image packet: SourcePort={packet.SourcePort}, DestinationPort={packet.DestinationPort}, Timestamp={packet.Timestamp}");
+            log(1, "Received image packet");
 
             return packet;
         }
@@ -106,6 +140,9 @@ namespace CasinoLibrary
             TxBytes = packet.Serialize();
             stream.Write(TxBytes, 0, TxBytes.Length);
 
+            //Log the packet sent
+            log(0, "Sent packet");
+
             return packet;
         }
 
@@ -121,6 +158,9 @@ namespace CasinoLibrary
             TxBytes = packet.Serialize();
             stream.Write(TxBytes, 0, TxBytes.Length);
 
+            //Log the packet sent
+            log(1, "Sent image packet");
+
             return packet;
         }
 
@@ -129,6 +169,8 @@ namespace CasinoLibrary
             // Close everything
             client.Close();
             server.Stop();
+
+            connection = false;
         }
 
         public void runProtocol(PlayerInfo p)
@@ -137,10 +179,12 @@ namespace CasinoLibrary
             {
                 //Client has disconnected
                 case 0:
+                    Console.WriteLine("Client disconected, terminating server...\n");
+
                     shutDown();
                     break;
                 case 1:
-                    Console.WriteLine("Start BlackJack Game request received. Initializing a new game...");
+                    Console.WriteLine("Start BlackJack Game request received. Initializing a new game...\n");
 
                     string[] data = dataPayloadString.Split(',');
                     p.bet = Int32.Parse(data[0]);
@@ -150,18 +194,18 @@ namespace CasinoLibrary
                     BJG.StartGame();
                     break;
                 case 2:
-                    Console.WriteLine("Player has joined the roulette table. Initializing a new game...");
+                    Console.WriteLine("Player has joined the roulette table. Initializing a new game...\n");
 
                     RouletteGame RG = new RouletteGame(this, p);
                     RG.listen();
                     break;
                 case 3:
-                    Console.WriteLine("Request to change profile picture, saving image...");
+                    Console.WriteLine("Request to change profile picture, saving image...\n");
                     packet = receiveImagePacket();
                     SaveImage(packet.DataPayload);
                     break;
                 case 4:
-                    Console.WriteLine("Request for profile picture, sending image...");
+                    Console.WriteLine("Request for profile picture, sending image...\n");
                     packet = sendImagePacket(0, "../../../Saved Images/ProfilePic.jpg");
                     break;
             }

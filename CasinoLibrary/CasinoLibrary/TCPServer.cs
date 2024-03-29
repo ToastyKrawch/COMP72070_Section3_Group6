@@ -208,7 +208,47 @@ namespace CasinoLibrary
                     Console.WriteLine("Request for profile picture, sending image...\n");
                     packet = sendImagePacket(0, "../../../Saved Images/ProfilePic.jpg");
                     break;
+                case 5:
+                    Console.WriteLine("Login request received, fetching results...\n");
+                    checkLogin();
+                    break;
+                case 6:
+                    Console.WriteLine("Register request received, attempting to create a new account...\n");
+                    createAccount();
+                    break;
             }
+        }
+
+        private void createAccount()
+        {
+            var parts = dataPayloadString.Split(',');
+
+            string username = parts[0].Trim();
+            string password = parts[1].Trim();
+            string filePath = @"../../../UserAuth.txt";
+
+            // Read all lines from the file.
+            string[] lines = System.IO.File.ReadAllLines(filePath);
+
+            // Check if username already exists.
+            foreach (string line in lines)
+            {
+                var lineParts = line.Split(',');
+                if (lineParts[0].Trim() == username)
+                {
+                    packet = sendPacket(1, "Username is already taken"); // Username already exists
+                    return;
+                }
+            }
+
+            // Username doesn't exist, so create the account.
+            using (StreamWriter sw = File.AppendText(filePath))
+            {
+                sw.WriteLine($"{username}, {password}");
+            }
+
+            packet = sendPacket(0, "Register successful"); // Successful register
+            return;
         }
 
         private void SaveImage(byte[] imageData)
@@ -219,6 +259,42 @@ namespace CasinoLibrary
             // Write the binary data to a file
             File.WriteAllBytes(imagePath, imageData);
             Console.WriteLine($"Image saved to {imagePath}");
+        }
+
+        private void checkLogin() 
+        {
+            var parts = dataPayloadString.Split(',');
+
+            string username = parts[0];
+            string password = parts[1];
+
+            string[] lines = System.IO.File.ReadAllLines(@"../../../UserAuth.txt");
+
+            foreach (string line in lines)
+            {
+                var lineParts = line.Split(',');
+                if (lineParts.Length != 2) continue; // Skip invalid lines
+
+                string fileUsername = lineParts[0].Trim();
+                string filePassword = lineParts[1].Trim();
+
+                if (fileUsername == username)
+                {
+                    if (filePassword == password)
+                    {
+                        packet = sendPacket(0, "Login successful"); // Valid username and password
+                        return;
+                    }
+                    else
+                    {
+                        packet = sendPacket(2, "Invalid password"); // Valid username but invalid password
+                        return;
+                    }
+                }
+            }
+
+            packet = sendPacket(1, "Invalid username"); // Username not found
+            return;
         }
     }
 }

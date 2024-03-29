@@ -18,21 +18,9 @@ namespace Casino_Client
                 
                 TCPClient MMMClient = new TCPClient();
                 PlayerInfo player = new PlayerInfo();
-                Image pfp;
-
-                MMMClient.packet = MMMClient.receivePacket();
-
-                //Request server for pfp
-                MMMClient.packet = MMMClient.sendPacket(4, "Requesting profile picture");
-                MMMClient.packet = MMMClient.receiveImagePacket();
-
-                using (var ms = new MemoryStream(MMMClient.packet.DataPayload))
-                {
-                    pfp = Image.FromStream(ms);
-                }
 
                 ApplicationConfiguration.Initialize();
-                Application.Run(new MainMenu(player, MMMClient, pfp));
+                Application.Run(new User_Authentication(player, MMMClient));
 
                 MMMClient.shutDown();
             }

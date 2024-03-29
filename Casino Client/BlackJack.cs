@@ -203,6 +203,7 @@ namespace Casino_Client
             pictureBox4.Hide();
             pictureBox5.Hide();
             pictureBox6.Hide();
+            button3.Hide();
             button10.Hide();
             button11.Hide();
         }
@@ -430,7 +431,7 @@ namespace Casino_Client
             //Continue to next player
             client.packet = client.sendPacket(2, "Continue");
 
-            for (int i = 0; i < numDealerCards - 2; i++) 
+            for (int i = 0; i < numDealerCards - 2; i++)
             {
                 await Task.Delay(1000);
                 dealerCards[i].Show();
@@ -778,7 +779,7 @@ namespace Casino_Client
             if (isBust == "True")
             {
                 client.packet = client.sendPacket(2, "Continue");
-                
+
                 label8.Text = "You Have Bust";
                 HideGameOptions();
 
@@ -787,7 +788,7 @@ namespace Casino_Client
                 await revealAllCards();
             }
 
-            
+
             else if (isBJ == "True")
             {
                 client.packet = client.sendPacket(2, "Continue");
@@ -882,7 +883,7 @@ namespace Casino_Client
             {
                 pictureBox.Location = new Point(375, 31);
             }
-            else if ( numDealerCards == 4)
+            else if (numDealerCards == 4)
             {
                 pictureBox.Location = new Point(499, 31);
             }
@@ -976,8 +977,8 @@ namespace Casino_Client
             client.packet = client.sendPacket(5, "Dealer,1");       //Request for game end results
             client.packet = client.receivePacket();                 //Receive the end results
             int result = Int32.Parse(client.dataPayloadString);
-            switch (result) 
-            { 
+            switch (result)
+            {
                 case 0:
                     label8.Text = "Blackjack!";
                     break;
@@ -1001,7 +1002,7 @@ namespace Casino_Client
 
             client.packet = client.sendPacket(5, "Dealer,2");       //Request for game end balance
             client.packet = client.receivePacket();                 //Receive the new balance
-            player.balance = Int32.Parse(client.dataPayloadString); 
+            player.balance = Int32.Parse(client.dataPayloadString);
         }
 
         //Restarts the game
@@ -1016,7 +1017,7 @@ namespace Casino_Client
             dealerCards = new List<PictureBox>();
             botCards = new List<PictureBox>();
             playerCards = new List<PictureBox>();
-            
+
             p1Hand = new List<Image>();
             p2Hand = new List<Image>();
             p3Hand = new List<Image>();
@@ -1033,6 +1034,15 @@ namespace Casino_Client
 
             HideGameElements();
             ShowBetElements();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            player.bet = 0;
+
+            this.Close();
+            var newForm = new MainMenu(player, client, pictureBox12.Image);
+            newForm.Show();
         }
     }
 }

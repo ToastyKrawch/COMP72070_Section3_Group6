@@ -21,6 +21,7 @@ namespace CasinoLibrary
         public byte CompressionFlag { get; set; } = 0; // 0 = no compression, 1 = compressed
         public byte[] SecureAuthenticationToken { get; set; }
         public byte[] DataPayload { get; set; }
+        public byte TimestampLength { get; private set; }
 
         private static byte[] secureKey = GenerateSecureKey();
 
@@ -31,6 +32,7 @@ namespace CasinoLibrary
             PacketType = packetType;
             DataPayload = dataPayload;
             Timestamp = Encoding.UTF8.GetBytes(DateTime.Now.ToString());
+            TimestampLength = (byte)(Timestamp.Length);
             UniquePacketId = GenerateUniquePacketId();
             SecureAuthenticationToken = GenerateSecureAuthToken();
 
@@ -74,6 +76,7 @@ namespace CasinoLibrary
                 // Convert each property to bytes and write to the MemoryStream
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)SourcePort)), 0, sizeof(short));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)DestinationPort)), 0, sizeof(short));
+                memoryStream.Write(new byte[] { TimestampLength }, 0, sizeof(byte));
                 memoryStream.Write((Timestamp), 0, Timestamp.Length);
                 memoryStream.Write(new byte[] { PacketType }, 0, sizeof(byte));
                 memoryStream.Write(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((int)PacketLength)), 0, sizeof(int));
@@ -100,7 +103,8 @@ namespace CasinoLibrary
                 // Read each property from the MemoryStream
                 var sourcePort = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 var destinationPort = IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
-                var timestamp = binaryReader.ReadBytes(21);
+                var timestampLength = binaryReader.ReadByte();
+                var timestamp = binaryReader.ReadBytes(timestampLength);
                 var packetType = binaryReader.ReadByte();
                 var packetLengthNetworkOrder = binaryReader.ReadInt32();
                 var packetLength = (uint)IPAddress.NetworkToHostOrder(packetLengthNetworkOrder);
@@ -112,7 +116,7 @@ namespace CasinoLibrary
                 var protocolVersion = binaryReader.ReadByte();
                 var compressionFlag = binaryReader.ReadByte();
                 var secureAuthToken = binaryReader.ReadBytes(32);
-                var dataPayloadLength = (int)packetLength - (47 + 21);
+                var dataPayloadLength = (int)packetLength - (47 + timestampLength);
 
                 if (dataPayloadLength < 0 || dataPayloadLength > memoryStream.Length - memoryStream.Position)
                     throw new InvalidOperationException($"Invalid data payload length: {dataPayloadLength}");
@@ -142,6 +146,7 @@ namespace CasinoLibrary
             UniquePacketId = GenerateUniquePacketId();
             SecureAuthenticationToken = GenerateSecureAuthToken();
             PacketLength = (uint)(47 + Timestamp.Length + dataPayload.Length);
+            TimestampLength = (byte)Timestamp.Length;
         }
     }
 }

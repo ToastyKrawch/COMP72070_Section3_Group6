@@ -13,8 +13,6 @@ class Program
             TCPServer MMMServer = new TCPServer();
             PlayerInfo player = new PlayerInfo();
 
-            MMMServer.packet = MMMServer.sendPacket(0, "\nHello Casino Client, Please select a game:\n1 for BlackJack\n2 for Roulette\n3 to Quit");
-
             while (MMMServer.connection)
             {
                 MMMServer.packet = MMMServer.receivePacket();

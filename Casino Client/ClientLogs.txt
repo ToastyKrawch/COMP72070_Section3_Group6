@@ -1,21 +1,26 @@
-Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:03 PM, PacketType=0, 
-PacketLength=152, UniquePacketID=89, ProtocolVersion=1, CompressionFlag=0
+Sent packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=5, 
+PacketLength=89, UniquePacketID=90, ProtocolVersion=1, CompressionFlag=0
 
 DataPayload: 
-Hello Casino Client, Please select a game:
-1 for BlackJack
-2 for Roulette
-3 to Quit
 
-Sent packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:03 PM, PacketType=4, 
-PacketLength=94, UniquePacketID=152, ProtocolVersion=1, CompressionFlag=0
+Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=0, 
+PacketLength=85, UniquePacketID=89, ProtocolVersion=1, CompressionFlag=0
 
-DataPayload: 
-Hello Casino Client, Please select a game:
-1 for BlackJack
-2 for Roulette
-3 to Quit
+DataPayload: Login successful
 
-Received image packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-28 5:00:04 PM, PacketType=0, 
-PacketLength=120798, UniquePacketID=94, ProtocolVersion=1, CompressionFlag=0
+Sent packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=4, 
+PacketLength=95, UniquePacketID=85, ProtocolVersion=1, CompressionFlag=0
+
+DataPayload: Login successful
+
+Received image packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=0, 
+PacketLength=120799, UniquePacketID=95, ProtocolVersion=1, CompressionFlag=0
+
+Sent packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:54:02 PM, PacketType=3, 
+PacketLength=95, UniquePacketID=120799, ProtocolVersion=1, CompressionFlag=0
+
+DataPayload: Login successful
+
+Sent image packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:54:02 PM, PacketType=3, 
+PacketLength=120799, UniquePacketID=95, ProtocolVersion=1, CompressionFlag=0
 

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using System.Text;
 
-namespace BlackJackGame___Tests
+namespace CasinoLibraryTests
 {
     public class MockTCPServer : TCPServer
     {

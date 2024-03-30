@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace BlackJackGame___Tests
+namespace CasinoLibraryTests
 {
     [TestClass]
     public class BlackjackGameTests

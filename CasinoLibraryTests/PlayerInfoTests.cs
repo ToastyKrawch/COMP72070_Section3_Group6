@@ -1,11 +1,12 @@
-﻿using CasinoLibrary;
+using CasinoLibrary;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
 namespace CasinoLibraryTests
 {
-    internal class PlayerInfoTests
+    [TestClass]
+    public class PlayerInfoTests
     {
         [TestMethod]
         public void PlayerInfo_DefaultConstructor()

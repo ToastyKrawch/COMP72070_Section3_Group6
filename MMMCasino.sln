@@ -5,11 +5,11 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casino Client", "Casino Client\Casino Client.csproj", "{DFB47D89-0469-44C9-BB43-ECDBA5344B0B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasinoLibrary - Tests", "Casino Server\BlackJackGame - Tests\CasinoLibrary - Tests.csproj", "{E3F4E417-E223-4316-A81C-136DC578A243}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casino Server", "Casino Server\Casino Server\Casino Server.csproj", "{C1CD76BB-7147-4070-9A9B-ED819ABAFBD3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasinoLibrary", "CasinoLibrary\CasinoLibrary\CasinoLibrary.csproj", "{AFDEA076-BA83-4392-8AF1-AFF9990A9905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoLibraryTests", "CasinoLibraryTests\CasinoLibraryTests.csproj", "{F390F6AE-C0E8-4552-B84F-54BEBE155AB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{DFB47D89-0469-44C9-BB43-ECDBA5344B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFB47D89-0469-44C9-BB43-ECDBA5344B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFB47D89-0469-44C9-BB43-ECDBA5344B0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E3F4E417-E223-4316-A81C-136DC578A243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3F4E417-E223-4316-A81C-136DC578A243}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3F4E417-E223-4316-A81C-136DC578A243}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3F4E417-E223-4316-A81C-136DC578A243}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1CD76BB-7147-4070-9A9B-ED819ABAFBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1CD76BB-7147-4070-9A9B-ED819ABAFBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1CD76BB-7147-4070-9A9B-ED819ABAFBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{AFDEA076-BA83-4392-8AF1-AFF9990A9905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFDEA076-BA83-4392-8AF1-AFF9990A9905}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFDEA076-BA83-4392-8AF1-AFF9990A9905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F390F6AE-C0E8-4552-B84F-54BEBE155AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F390F6AE-C0E8-4552-B84F-54BEBE155AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F390F6AE-C0E8-4552-B84F-54BEBE155AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F390F6AE-C0E8-4552-B84F-54BEBE155AB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

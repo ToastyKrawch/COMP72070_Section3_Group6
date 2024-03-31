@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>BlackJackGame___Tests</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -18,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CasinoLibrary\CasinoLibrary\CasinoLibrary.csproj" />
+    <ProjectReference Include="..\CasinoLibrary\CasinoLibrary\CasinoLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>

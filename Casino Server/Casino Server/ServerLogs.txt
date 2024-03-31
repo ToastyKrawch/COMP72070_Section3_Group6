@@ -1,31 +1,5 @@
-Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:44 PM, PacketType=0, 
-PacketLength=90, UniquePacketID=0, ProtocolVersion=1, CompressionFlag=0
+Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-31 9:16:32 AM, PacketType=0, 
+PacketLength=89, UniquePacketID=0, ProtocolVersion=1, CompressionFlag=0
 
 DataPayload: Hello, Casino Server!
-
-Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=5, 
-PacketLength=89, UniquePacketID=90, ProtocolVersion=1, CompressionFlag=0
-
-DataPayload: Toasty,MmCrosby8716!
-
-Sent packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=0, 
-PacketLength=85, UniquePacketID=89, ProtocolVersion=1, CompressionFlag=0
-
-DataPayload: Toasty,MmCrosby8716!
-
-Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=4, 
-PacketLength=95, UniquePacketID=85, ProtocolVersion=1, CompressionFlag=0
-
-DataPayload: Requesting profile picture
-
-Sent image packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:53:56 PM, PacketType=0, 
-PacketLength=120799, UniquePacketID=95, ProtocolVersion=1, CompressionFlag=0
-
-Received packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:54:02 PM, PacketType=3, 
-PacketLength=95, UniquePacketID=120799, ProtocolVersion=1, CompressionFlag=0
-
-DataPayload: Prepare for image transfer
-
-Received image packet: SourcePort=27000, DestinationPort=27000, Timestamp=2024-03-29 12:54:02 PM, PacketType=3, 
-PacketLength=120799, UniquePacketID=95, ProtocolVersion=1, CompressionFlag=0
 

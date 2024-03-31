@@ -145,8 +145,6 @@
             Controls.Add(label1);
             Name = "MainMenu";
             Text = "MainMenu";
-            Load += MainMenu_Load;
-            Resize += MainMenu_Resize;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

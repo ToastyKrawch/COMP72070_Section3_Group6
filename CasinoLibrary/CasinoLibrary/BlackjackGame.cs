@@ -103,8 +103,8 @@ namespace CasinoLibrary
 
                 gamestatus = false;
             }
-            gameOutcome(playerHand, "p");
-            gameOutcome(conservativeHand, "c");
+            gameOutcome(playerHand);
+            gameOutcome(conservativeHand);
 
             //Listen for client's game outcome requests
             MMMServer.packet.setPacket(27000, 27000, 4, MMMServer.packet.DataPayload);
@@ -336,7 +336,7 @@ namespace CasinoLibrary
                     }
                     else if (data[0] == "Dealer")
                     {
-                        int result = gameOutcome(playerHand, "p");
+                        int result = gameOutcome(playerHand);
                         if (data[1] == "0")
                         {
                             player.calculatePayout(0, result);
@@ -404,27 +404,8 @@ namespace CasinoLibrary
             DisplayHands(true);
         }
 
-        public int gameOutcome(List<Card> hand, string whichHand)
+        public int gameOutcome(List<Card> hand)
         {
-            string output = "";
-            // Determines which hand was sent
-            if (whichHand == "p")
-            {
-                output = "Player";
-            }
-            else if (whichHand == "c")
-            {
-                output = "Conservative Bot";
-            }
-            else if (whichHand == "t")
-            {
-                output = "Tactical Bot";
-            }
-            else
-            {
-                output = "All or Nothing Bot";
-            }
-
             //If player stands or player gets blackjack
             if (hand.Count == 2)
             {

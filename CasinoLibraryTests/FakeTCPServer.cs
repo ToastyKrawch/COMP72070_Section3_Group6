@@ -36,7 +36,7 @@ namespace CasinoLibraryTests
 
         public void SetupReceive(byte type, string v)
         {
-            packet.setPacket(27000, 27000, type, Encoding.UTF8.GetBytes(v));
+            packet = new CasinoPacket(27000, 27000, type, Encoding.UTF8.GetBytes(v));
             receivedPackets.Add(packet);      
         }
 

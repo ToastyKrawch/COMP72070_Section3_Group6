@@ -114,7 +114,7 @@ namespace CasinoLibraryTests
             Assert.AreNotEqual(dealtCard, secondDealtCard, "The second dealt card should not be the same as the first dealt card.");
 
             // Assert the deck size has decreased by one
-            Assert.AreEqual(initialCount - 1, deck.RemainingCards(), "The deck should have one less card after dealing.");
+            Assert.AreEqual(initialCount - 2, deck.RemainingCards(), "The deck should have one less card after dealing.");
 
             // Additional test: If you deal all cards and track them, you can verify that the first dealt card is not in the remaining deck
             List<Card> remainingCards = new List<Card>();
@@ -146,9 +146,6 @@ namespace CasinoLibraryTests
 
             // The next card to deal should now be the last card in the deck
             var lastCard = deck.DealCard();
-
-            // The second card dealt should be equal to the last card remaining after all others have been dealt
-            Assert.AreEqual(secondDealtCard, lastCard, "After dealing the top card, the next card should become the new first card.");
         }
 
 

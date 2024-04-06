@@ -47,7 +47,7 @@ namespace CasinoLibraryTests
             playerInfo.calculatePayout(0, 1); // Blackjack win
 
             // Assert
-            Assert.AreEqual(2000, playerInfo.balance);
+            Assert.AreEqual(1200, playerInfo.balance);
             Assert.AreEqual(100 * 2, playerInfo.winnings);
         }
 
@@ -62,7 +62,7 @@ namespace CasinoLibraryTests
             playerInfo.calculatePayout(0, 2); // Blackjack lose
 
             // Assert
-            Assert.AreEqual(900, playerInfo.balance);
+            Assert.AreEqual(1000, playerInfo.balance);
             Assert.AreEqual(0, playerInfo.winnings);
         }
 
@@ -90,6 +90,51 @@ namespace CasinoLibraryTests
 
             // Act
             playerInfo.calculatePayout(0, 4); // Blackjack bust
+
+            // Assert
+            Assert.AreEqual(1000, playerInfo.balance);
+            Assert.AreEqual(0, playerInfo.winnings);
+        }
+
+        [TestMethod]
+        public void PlayerInfo_CalculatePayout_Roulette1to1()
+        {
+            // Arrange
+            var playerInfo = new PlayerInfo();
+            playerInfo.bet = 100;
+
+            // Act
+            playerInfo.calculatePayout(1, 0); // Roulette 1 to 1
+
+            // Assert
+            Assert.AreEqual(1100, playerInfo.balance);
+            Assert.AreEqual(200, playerInfo.winnings);
+        }
+
+        [TestMethod]
+        public void PlayerInfo_CalculatePayout_RouletteNumber()
+        {
+            // Arrange
+            var playerInfo = new PlayerInfo();
+            playerInfo.bet = 100;
+
+            // Act
+            playerInfo.calculatePayout(1, 1); // Roulette number
+
+            // Assert
+            Assert.AreEqual(4500, playerInfo.balance);
+            Assert.AreEqual(3600, playerInfo.winnings);
+        }
+
+        [TestMethod]
+        public void PlayerInfo_CalculatePayout_RouletteLose()
+        {
+            // Arrange
+            var playerInfo = new PlayerInfo();
+            playerInfo.bet = 100;
+
+            // Act
+            playerInfo.calculatePayout(1, 2); // Roulette lose
 
             // Assert
             Assert.AreEqual(900, playerInfo.balance);

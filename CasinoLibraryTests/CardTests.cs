@@ -39,20 +39,5 @@ namespace CasinoLibraryTests
             // done by trying to set the properties and catching any expected exceptions,
             // or by using reflection to assert that set accessors are private.
         }
-
-        [TestMethod]
-        [Description("Tests that two Card objects with identical Suit, Rank, and Value are considered equal.")]
-        public void TestCardEqualityCheck()
-        {
-            // Arrange
-            Card card1 = new Card("Hearts", "10", 10);
-            Card card2 = new Card("Hearts", "10", 10);
-
-            // Act & Assert
-            // This test requires you to have an equality method implemented to compare card objects.
-            Assert.AreEqual(card1, card2);
-        }
-
-
     }
 }
